@@ -11,15 +11,19 @@
 
   // Helpers
   Awe.isArray = function(o) {
-    return o.constructor == Array.prototype.constructor;
+    return o && o.constructor == Array.prototype.constructor;
   }
 
   Awe.isArrayOrString = function(o) {
-    return o.constructor == Array.prototype.constructor || o.constructor == String.prototype.constructor;
+    return o && o.constructor == Array.prototype.constructor || o.constructor == String.prototype.constructor;
   }
 
   Awe.isType = function(o, type) {
-    return o.constructor == type.prototype.constructor;
+    return o && o.constructor == type.prototype.constructor;
+  }
+  
+  Awe.isFunction = function(o) {
+    return o && o.constructor == Function.prototype.constructor;
   }
 
   // Environment-specific vars
@@ -101,13 +105,250 @@
       
     return el;
   }
+
+  /*
+   * method: Awe.enableDrag
+   * 
+   * purpose: enable drag on a DOM element
+   *
+   */
+   
+  function getClientPos(evt)
+  {
+    if (Awe.env.inputTouch)
+    {
+      // TODO: Use correct touch (lookup by touch start ID instead of always using index 0)
+      return { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
+    }
+    return { x: evt.clientX, y: evt.clientY };
+  }
+
+  Awe.enableDrag = function(el, config) {
   
+    config = config || {};
+    var filters = config.filters;
+    var updater = config.updater || new Awe.DragUpdaterTopLeft();
+    
+    // Convert a single drag filter
+    if (filters) {
+      if (!Awe.isArray(filters)) {
+        filters = [filters];
+      }
+    } else {
+      filters = [];
+    }
+  
+    // Drag state
+    var touch = {};
+  
+    function processDrag(clientPos, pos, start) {
+      if (touch.now) {
+        touch.maxDistanceSquared = Math.max(touch.maxDistanceSquared, (touch.now.x - touch.start.x) * (touch.now.x - touch.start.x) + (touch.now.y - touch.start.y) * (touch.now.y - touch.start.y));
+      } else {
+        touch.maxDistanceSquared = 0;
+      }
+  
+      // Create the new drag state
+      var newDrag = {
+        clientPos: { x: clientPos.x, y: clientPos.y },
+        pos: { x: pos.x, y: pos.y },
+        dragTime: (Date.now() - touch.startTime) * 0.001,
+        maxDistanceSquared: touch.maxDistanceSquared
+      }
+      if (touch.lastDrag) {
+        newDrag.clientDelta = {
+          x: newDrag.clientPos.x - touch.lastDrag.clientPos.x,
+          y: newDrag.clientPos.y - touch.lastDrag.clientPos.y
+        }
+        newDrag.delta = {
+          x: newDrag.pos.x - touch.lastDrag.pos.x,
+          y: newDrag.pos.y - touch.lastDrag.pos.y
+        }
+      } else {
+        newDrag.clientDelta = { x: 0, y: 0 };
+        newDrag.delta = { x: 0, y: 0 };
+      }
+      
+      // Copy current drag state to last
+      touch.lastDrag = {
+        clientPos: { x: newDrag.clientPos.x, y: newDrag.clientPos.y },
+        pos: { x: newDrag.pos.x, y: newDrag.pos.y },
+        delta: { x: newDrag.delta.x, y: newDrag.delta.y },
+        clientDelta: { x: newDrag.clientDelta.x, y: newDrag.clientDelta.y },
+        dragTime: newDrag.dragTime,
+        maxDistanceSquared: newDrag.maxDistanceSquared
+      }
+      
+      return newDrag;
+    }
+    
+    function updateDrag() {
+      return touch.lastDrag && {
+        clientPos: touch.lastDrag.clientPos,
+        pos: touch.lastDrag.pos,
+        clientDelta: { x: 0, y: 0 },
+        delta: { x: 0, y: 0 },
+        dragTime: (Date.now() - touch.startTime) * 0.001,
+        maxDistanceSquared: touch.lastDrag.maxDistanceSquared
+      }
+    }
+    
+    // Per-frame updates
+    function dragUpdate(evt) {
+      var clientPos = touch.now || touch.start;
+      clientPos = { x: clientPos.x, y: clientPos.y };
+      var pos;
+      Awe.forEach(filters, function(filter) {
+        if (!pos && filter.animating) {
+          pos = filter.animate();
+        }
+      });
+      if (pos) {
+        updater.move(el, pos);
+        config.onChange(processDrag(clientPos, pos));
+      }
+      if (config.onUpdate) {
+        var drag = updateDrag();
+        drag && config.onUpdate(drag);
+      }
+    }
+      
+    function dragMove(evt) {
+      Awe.cancelEvent(evt);
+      touch.now = getClientPos(evt);
+      var pos = applyFilters(touch.now);
+      var drag = processDrag(touch.now, pos);
+      if (config.onChange) {
+        config.onChange(drag);
+      }
+    }
+    
+    function dragEnd(evt) {
+      if (!touch.dragging) {
+        return;
+      }
+      evt && Awe.cancelEvent(evt);
+      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
+      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      // TODO Check for animating filters before cancelling event bits
+      Awe.forEach(filters, function(filter) {
+        if (filter.end) {
+          filter.end();
+        }
+      });
+      if (updater.end) {
+        updater.end();
+      }
+      if (config.onRelease && evt) {
+        var pos = getClientPos(evt);
+        config.onRelease(processDrag(pos, pos));
+      }
+      if (touch.updateIntervalId) {
+        clearInterval(touch.updateIntervalId);
+        touch.updateIntervalId = null;
+      }
+    }
+    
+    function applyFilters(pos) {
+      Awe.forEach(filters, function(filter) {
+        pos = filter.move(el, pos) || pos;
+      });
+      return pos;
+    }
+    
+    function dragStart(evt) {
+      Awe.cancelEvent(evt);
+      touch.dragging = true;
+      touch.now = getClientPos(evt);
+      touch.lastDrag = null;
+      touch.start = getClientPos(evt);
+      touch.startTime = Date.now();
+      touch.maxDistanceSquared = 0;
+      
+      var pos = touch.start;
+      Awe.forEach(filters, function(filter) {
+        pos = filter.start(el, pos) || pos;
+      });
+      if (updater.start) {
+        updater.start(el, pos);
+      }
+  
+      var pos = applyFilters(touch.now);
+      
+      var drag = processDrag(touch.now, pos);
+      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
+      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      if (config.onUpdate) {
+        touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 33);
+      }
+    }
+    
+    xAddEventListener(el, Awe.env.eventDragStart, dragStart);
+    
+    el._disableDrag = function() {
+      xRemoveEventListener(el, Awe.env.eventDragStart, dragStart);
+      // Make sure any in-progress drags have their listeners removed
+      dragEnd();
+    }
+  }
+  
+  /*
+   * method: Awe.disableDrag
+   * 
+   * purpose: disable drag on a DOM element
+   *
+   */
+  Awe.disableDrag = function(el) {
+    if (el._disableDrag) {
+      el._disableDrag();
+      el._disableDrag = null;
+    }
+  }
+  
+  Awe.DragFilterLimitAxes = function(minX, maxX, minY, maxY) {
+    var _i = this;
+    
+    _i.start = function(el, pos) {
+    }
+    
+    _i.move = function(el, pos) {
+      var x = Awe.clamp(pos.x, minX, maxX);
+      var y = Awe.clamp(pos.y, minY, maxY);
+      return { x: x, y: y };
+    }
+  }
+  
+  Awe.DragUpdaterTopLeft = function() {
+    var _i = this;
+    
+    _i.start = function(el, pos) {
+      _i.startPos = pos;
+      _i.startX = xLeft(el);
+      _i.startY = xTop(el);
+    }
+    
+    _i.move = function(el, pos) {
+      var left = _i.startX + (pos.x - _i.startPos.x);
+      var top = _i.startY + (pos.y - _i.startPos.y);
+      el.style.left = left + "px";
+      el.style.top = top + "px";
+      
+      return pos;
+    }
+  }
+
+  /*
+   * method: Awe.objectToString
+   * 
+   * purpose: convert an arbitrary object to string representation for logging
+   *
+   */
   Awe.objectToString = function(o) {
     // Do something more interesting in the future?
     return JSON.stringify(o);
   }
 
-  Awe.requestAnimationFrame = (function() {
+  var requestAnimationFrameShim = (function() {
     return  global.requestAnimationFrame       ||
             global.webkitRequestAnimationFrame || 
             global.mozRequestAnimationFrame    || 
@@ -117,6 +358,7 @@
               global.setTimeout(callback, 1000 / 60);
             };
   })();
+  Awe.requestAnimationFrame = function() { requestAnimationFrameShim.apply(global, arguments); }
 
   // Cancels an event to stop propogation. Use this to swallow events in listeners.
   Awe.cancelEvent = function(e) {
@@ -155,7 +397,75 @@
     return ++_nextGuid;
   }
 
+  // Classes
+  var hexToInt = {
+    "0":0,
+    "1":1,
+    "2":2,
+    "3":3,
+    "4":4,
+    "5":5,
+    "6":6,
+    "7":7,
+    "8":8,
+    "9":9,
+    "a":10,"A":10,
+    "b":11,"B":11,
+    "c":12,"C":12,
+    "d":13,"D":13,
+    "e":14,"E":14,
+    "f":15,"F":15,
+  }
+  
+  // Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
+  // accessors to r/g/b/a components and CSS color strings.
+  Awe.Color = function(color) {
+    var _i = this;
+    
+    _i.toHex = function() {
+      return _i.hex;
+    }
+  
+    _i.toRGBA = function(alpha) {
+      if (alpha == undefined) {
+        alpha = _i.a;
+      }
+      return "rgba("+_i.r+","+_i.g+","+_i.b+","+alpha+")";
+    }
+  
+    _i.toRGB = function() {
+      return "rgba("+_i.r+","+_i.g+","+_i.b+")";
+    }
+        
+    if (color[0] == "#") {
+      _i.hex = color;
+      _i.r = (hexToInt[color[1]] << 4) + hexToInt[color[2]];
+      _i.g = (hexToInt[color[3]] << 4) + hexToInt[color[4]];
+      _i.b = (hexToInt[color[5]] << 4) + hexToInt[color[6]];
+      _i.a = 1;
+    } else {
+      if (color.indexOf('rgb(') == 0) {
+        color = color.substring(4,color.length-1);
+      } else if (color.indexOf('rgba(') == 0) {
+        color = color.substring(5,color.length-1);
+      }
+      var i;
+      _i.r = parseInt(color);
+      color = color.substring(color.indexOf(',')+1);
+      _i.g = parseInt(color);
+      color = color.substring(color.indexOf(',')+1);
+      _i.b = parseInt(color);
+      color = color.substring(color.indexOf(',')+1);
+      if (color) {
+        _i.a = parseFloat(color);
+      } else {
+        _i.a = 1;
+      }
+    }
+  }
+
   // Allow the script URL to override the namespace, naming the library Monkey instead of Awe etc
+  // NOTE: This is not likely to ever be necessary, but it's an interesting theoretical exercise
   var scripts = document.getElementsByTagName('script');
   var scriptUrl = scripts && scripts.length && scripts[scripts.length - 1].src;
   var overrideNamespace = scriptUrl && Awe.getQueryParam("namespace", scriptUrl);
