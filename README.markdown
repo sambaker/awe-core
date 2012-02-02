@@ -1,5 +1,5 @@
-AWE (artefact web extensions)
-=============================
+AWE (Artefact Web Extensions) Core library
+==========================================
 
 Overview
 --------
@@ -10,11 +10,11 @@ The initial feature set will be anything that is in common use and duplicated be
 
 We will not be supporting all browsers. The expected supported browser set is:
 
-IE7+
-Safari 4+
-Chrome
-Opera
-Mobile Safari
+* IE7+
+* Safari 4+
+* Chrome
+* Opera
+* Mobile Safari
 
 There are no external dependencies besides having a sufficiently compliant browser.
 
