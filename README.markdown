@@ -1,4 +1,8 @@
 AWE (artefact web extensions)
+=============================
+
+Overview
+--------
 
 The purpose of this library is to share the Javascript functionality that is common to most of Artefact's web app projects in a single repo.
 
@@ -13,3 +17,13 @@ Opera
 Mobile Safari
 
 There are no external dependencies besides having a sufficiently compliant browser.
+
+Including as a submodule
+------------------------
+
+If you have a git project and you want to include this repository as a submodule run these commands:
+
+    git submodule add https://github.com/sambaker/awe-core.git [destination folder]
+    git submodule init
+    git submodule update
+
