@@ -27,3 +27,41 @@ If you have a git project and you want to include this repository as a submodule
     git submodule init
     git submodule update
 
+Preliminary documentation
+-------------------------
+
+    // Helper functions
+    Awe.isArray(object)
+    Awe.isArrayOrString(object)
+    Awe.isFunction(object)
+    Awe.isType(object, type)
+    Awe.getQueryParam(name, [url = window.location.href])
+    Awe.forEach(array, callback, [thisArg = window])
+    Awe.cancelEvent(event)
+    Awe.objectToString(obj) - convert an object into a readable string for logging
+    Awe.requestAnimationFrame(callback)
+    
+    Awe.getGuid() - gets a session-unique string identifier
+    Awe.getGuidNumeric() - gets a session-unique numeric identifier > 0
+    
+    // Math
+    Awe.clamp(num, min, max)
+    Awe.acosSafe(num) - doesn't throw an exception if num is out of the range -1 to 1 but clamps num to that range instead
+    
+    // Environment helpers (sample contents)
+    Awe.env = {
+    	inputTouch: true,
+    	inputMouse: false,
+    	eventDragStart: "touchstart",
+    	eventDragMove: "touchmove",
+    	eventDragEnd: "touchend",
+    	eventClick: "touchend"
+    }
+    
+    // DOM helpers
+    Awe.createElement(type, parent, config)
+    Awe.enableDrag(element, config)
+    Awe.disableDrag(element)
+    
+    // Classes
+    Awe.Color Ð example, color = Awe.Color("#f8f8f8")
