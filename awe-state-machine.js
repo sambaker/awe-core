@@ -1,7 +1,4 @@
 (function(Awe, global, document, undefined) {
-  if (!Awe) {
-    throw "Error: awe-core.js must be loaded before awe-state-machine";
-  }
 
   // State contains any of:
   //  allowOnly - array with 0 or more states (or null)
