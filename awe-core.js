@@ -1,7 +1,8 @@
 /*
  * Artefact Web Extensions
  *
- * Copyright 2012, Artefact
+ * Copyright 2012, Artefact Group LLC
+ * Licensed under MIT.
  */
 (function(global, document, namespace, undefined) {
   namespace = namespace || "Awe";
