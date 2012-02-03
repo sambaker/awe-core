@@ -405,7 +405,7 @@
     if (interval === undefined) {
       requestAnimationFrameShim(function wrapper() {
         time = Date.now();
-        if (!callback((time - lastTime) * 0.001, (time - startTime) * 0.001)) {
+        if (!callback(time - lastTime, time - startTime)) {
           requestAnimationFrameShim(wrapper);
         }
         lastTime = time;
@@ -413,7 +413,7 @@
     } else {
       var intervalId = setInterval(function () {
         time = Date.now();
-        if (!callback((time - lastTime) * 0.001, (time - startTime) * 0.001)) {
+        if (!callback(time - lastTime, time - startTime)) {
           clearInterval(intervalId);
         }
         lastTime = time;

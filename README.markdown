@@ -42,7 +42,7 @@ Preliminary documentation
     Awe.addAnimationCallback(callback, [intervalMs])
       - uses requestAnimationFrame (or setInterval if the interval parameter is supplied) to call the supplied callback continuously
         until the callback returns true to signal its completion. The callback receives two parameters: the time elapsed since it was last called and
-        the total time elapsed (both in seconds). Example use:
+        the total time elapsed (both in millseconds). Example use is:
               
         Awe.addAnimationCallback(function(delta, elapsed) {
           console.log("Delta",delta,"Elapsed",elapsed);
