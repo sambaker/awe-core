@@ -113,16 +113,6 @@
    *
    */
    
-  function getClientPos(evt)
-  {
-    if (Awe.env.inputTouch)
-    {
-      // TODO: Use correct touch (lookup by touch start ID instead of always using index 0)
-      return { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
-    }
-    return { x: evt.clientX, y: evt.clientY };
-  }
-
   Awe.enableDrag = function(el, config) {
   
     config = config || {};
@@ -140,6 +130,21 @@
   
     // Drag state
     var touch = {};
+
+    function getClientPos(evt)
+    {
+      var p;
+      if (Awe.env.inputTouch)
+      {
+        // TODO: Use correct touch (lookup by touch start ID instead of always using index 0)
+        p = { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
+      } else {
+        p = { x: evt.clientX, y: evt.clientY };
+      }
+      p.x += touch.anchor.x;
+      p.y += touch.anchor.y;
+      return p
+    }
   
     function processDrag(clientPos, pos, start) {
       if (touch.now) {
@@ -259,7 +264,15 @@
     function dragStart(evt) {
       Awe.cancelEvent(evt);
       touch.dragging = true;
+      touch.anchor = { x: 0, y: 0 }
+      // Calculate the position without the anchor
       touch.now = getClientPos(evt);
+      // Calculate the anchor position
+      if (config.anchor) {
+        touch.anchor = config.anchor.getAnchor(el, touch.now);
+        // Get the client position again, taking the anchor into account
+        touch.now = getClientPos(evt);
+      }
       touch.lastDrag = null;
       touch.start = getClientPos(evt);
       touch.startTime = Date.now();
@@ -305,6 +318,14 @@
     }
   }
   
+  Awe.DragAnchorTopLeft = function() {
+    var _i = this;
+    
+    _i.getAnchor = function(el, pos) {
+      return { x: xLeft(el) - pos.x, y: xTop(el) - pos.y }
+    }
+  }
+  
   Awe.DragFilterLimitAxes = function(minX, maxX, minY, maxY) {
     var _i = this;
     
@@ -322,14 +343,11 @@
     var _i = this;
     
     _i.start = function(el, pos) {
-      _i.startPos = pos;
-      _i.startX = xLeft(el);
-      _i.startY = xTop(el);
     }
     
     _i.move = function(el, pos) {
-      var left = _i.startX + (pos.x - _i.startPos.x);
-      var top = _i.startY + (pos.y - _i.startPos.y);
+      var left = pos.x;
+      var top = pos.y;
       el.style.left = left + "px";
       el.style.top = top + "px";
       
