@@ -339,6 +339,27 @@
     }
   }
   
+  // To be continued...
+  /*
+  Awe.DragFilterMomentum = function() {
+    var _i = this;
+    
+    _i.start = function(el, pos) {
+    }
+    
+    _i.move = function(el, pos) {
+      _i.animating = true;
+      return { x: x, y: y };
+    }
+    
+    _i.animate = function() {
+      // Apply velocity and acceleration
+      if (vel == 0) {
+        _i.animating = false;
+    }
+  }
+  */
+  
   Awe.DragUpdaterTopLeft = function() {
     var _i = this;
     
@@ -376,7 +397,29 @@
               global.setTimeout(callback, 1000 / 60);
             };
   })();
-  Awe.requestAnimationFrame = function() { requestAnimationFrameShim.apply(global, arguments); }
+  
+  // Specify a callbakc
+  Awe.addAnimationCallback = function(callback, interval) {
+    var startTime = Date.now();
+    var lastTime = startTime;
+    if (interval === undefined) {
+      requestAnimationFrameShim(function wrapper() {
+        time = Date.now();
+        if (!callback((time - lastTime) * 0.001, (time - startTime) * 0.001)) {
+          requestAnimationFrameShim(wrapper);
+        }
+        lastTime = time;
+      })
+    } else {
+      var intervalId = setInterval(function () {
+        time = Date.now();
+        if (!callback((time - lastTime) * 0.001, (time - startTime) * 0.001)) {
+          clearInterval(intervalId);
+        }
+        lastTime = time;
+      }, interval);
+    }
+  }
 
   // Cancels an event to stop propogation. Use this to swallow events in listeners.
   Awe.cancelEvent = function(e) {

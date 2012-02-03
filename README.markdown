@@ -39,7 +39,17 @@ Preliminary documentation
     Awe.forEach(array, callback, [thisArg = window])
     Awe.cancelEvent(event)
     Awe.objectToString(obj) - convert an object into a readable string for logging
-    Awe.requestAnimationFrame(callback)
+    Awe.addAnimationCallback(callback, [intervalMs])
+      - uses requestAnimationFrame (or setInterval if the interval parameter is supplied) to call the supplied callback continuously
+        until the callback returns true to signal its completion. The callback receives two parameters: the time elapsed since it was last called and
+        the total time elapsed (both in seconds). Example use:
+              
+        Awe.addAnimationCallback(function(delta, elapsed) {
+          console.log("Delta",delta,"Elapsed",elapsed);
+          if (elapsed > 10) {
+            return true;
+          }
+        });        
     
     Awe.getGuid() - gets a session-unique string identifier
     Awe.getGuidNumeric() - gets a session-unique numeric identifier > 0
