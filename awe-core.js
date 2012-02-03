@@ -399,7 +399,7 @@
             };
   })();
   
-  // Specify a callbakc
+  // Specify a callback
   Awe.addAnimationCallback = function(callback, interval) {
     var startTime = Date.now();
     var lastTime = startTime;
@@ -414,7 +414,7 @@
     } else {
       var intervalId = setInterval(function () {
         time = Date.now();
-        if (!callback(time - lastTime, time - startTime)) {
+        if (callback(time - lastTime, time - startTime)) {
           clearInterval(intervalId);
         }
         lastTime = time;
