@@ -403,23 +403,44 @@
   Awe.addAnimationCallback = function(callback, interval) {
     var startTime = Date.now();
     var lastTime = startTime;
+    var handle = {};
+    var cancelled = false;
+    
     if (interval === undefined) {
       requestAnimationFrameShim(function wrapper() {
         time = Date.now();
-        if (!callback(time - lastTime, time - startTime)) {
+        if (!cancelled && !callback(time - lastTime, time - startTime)) {
           requestAnimationFrameShim(wrapper);
         }
         lastTime = time;
       })
+      handle.cancel = function() {
+        cancelled = true;
+      }
     } else {
       var intervalId = setInterval(function () {
         time = Date.now();
         if (callback(time - lastTime, time - startTime)) {
-          clearInterval(intervalId);
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
         }
         lastTime = time;
       }, interval);
+      handle.cancel = function() {
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      }
     }
+    
+    return handle;
+  }
+  
+  Awe.cancelAnimationCallback = function(handle) {
+    handle.cancel();
   }
 
   // Cancels an event to stop propogation. Use this to swallow events in listeners.
