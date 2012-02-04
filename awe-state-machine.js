@@ -1,3 +1,9 @@
+/*
+ * Artefact Web Extensions
+ *
+ * Copyright 2012, Artefact Group LLC
+ * Licensed under MIT.
+ */
 (function(Awe, global, document, undefined) {
 
   // State contains any of:
