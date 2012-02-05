@@ -26,6 +26,11 @@ If you have a git project and you want to include this repository as a submodule
     git submodule add https://github.com/sambaker/awe-core.git [destination folder]
     git submodule init
     git submodule update
+    
+AWE and Rails Apps
+------------------
+
+There is a nifty gem that will make it easy to install AWE into the Rails 3.1 asset pipeline and keep it up to date. See https://github.com/shyam-habarakada/awe-rails
 
 Preliminary documentation
 -------------------------
@@ -76,4 +81,4 @@ Preliminary documentation
     Awe.disableDrag(element)
     
     // Classes
-    Awe.Color Ð example, color = Awe.Color("#f8f8f8")
+    Awe.Color ï¿½ example, color = Awe.Color("#f8f8f8")
