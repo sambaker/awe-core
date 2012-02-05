@@ -42,6 +42,11 @@
     return Math.min(Math.max(n, min), max);
   }
 
+  // Return -1 if n < 0 or 1 otherwise
+  Awe.sign = function(n) {
+    return (n < 0) ? -1 : 1;
+  }
+
   // Clamp a number between -1 and 1 before passing to Math.acos to prevent an exception.
   // Ensure that this makes sense for your parameters - it is assumed they will be close to
   // the clamped range but allows computational errors to be safely ignored.
