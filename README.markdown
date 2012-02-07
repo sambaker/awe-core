@@ -26,6 +26,11 @@ If you have a git project and you want to include this repository as a submodule
     git submodule add https://github.com/sambaker/awe-core.git [destination folder]
     git submodule init
     git submodule update
+    
+AWE and Rails Apps
+------------------
+
+There is a nifty gem that will make it easy to install AWE into the Rails 3.1 asset pipeline and keep it up to date. See https://github.com/shyam-habarakada/awe-rails
 
 Preliminary documentation
 -------------------------
@@ -40,6 +45,7 @@ Preliminary documentation
     Awe.cancelEvent(event)
     Awe.objectToString(obj) - convert an object into a readable string for logging
     Awe.addAnimationCallback(callback, [intervalMs])
+      - returns a handle that can be passed to Awe.cancelAnimationCallback(handle)
       - uses requestAnimationFrame (or setInterval if the interval parameter is supplied) to call the supplied callback continuously
         until the callback returns true to signal its completion. The callback receives two parameters: the time elapsed since it was last called and
         the total time elapsed (both in millseconds). Example use is:
@@ -49,7 +55,8 @@ Preliminary documentation
           if (elapsed > 10) {
             return true;
           }
-        });        
+        });
+    Awe.cancelAnimationCallback(handle) - cancels an animation started previously
     
     Awe.getGuid() - gets a session-unique string identifier
     Awe.getGuidNumeric() - gets a session-unique numeric identifier > 0
@@ -74,4 +81,4 @@ Preliminary documentation
     Awe.disableDrag(element)
     
     // Classes
-    Awe.Color Ð example, color = Awe.Color("#f8f8f8")
+    Awe.Color ï¿½ example, color = Awe.Color("#f8f8f8")
