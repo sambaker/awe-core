@@ -119,23 +119,23 @@
   /* 
    * method: Awe.popup
    *
-   * purpose: Implement show/hide behavior on a popup DIV element.
+   * purpose: Show/hide popup behavior for DIV elements.
    *
    */
   Awe.popup = function(id) {
   
-    _i = this;  
-    _i._el = document.getElementById(id);
+    var _i = this;  
+    var element = document.getElementById(id);
     
-    if(!_i._element) throw "invalid id";
+    if(!element) throw "cannot find element with given id";
     
     _i.show = function() {
-      if(_i._el.style.visibility != "visible") {
-        _i._el.style.visibility = "visible";
+      if(element.style.visibility != "visible") {
+        element.style.visibility = "visible";
         Awe.__savedDocumentOnClickCallbacks.push(document.onclick);
         document.onclick = (function(e) {
           e = e || window.event;
-          if (!xHasPoint(popup, e.x, e.y)) { // TODO Handle x dependency
+          if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
             _i.hide(true);
           }
           return;
@@ -146,9 +146,8 @@
     }
     
     _i.hide = function(bubbleCurrentEvent) {
-      var popup = document.getElementById(id);
-      if(popup && popup.style.visibility != "hidden") {
-        popup.style.visibility = "hidden";
+      if(element.style.visibility != "hidden") {
+        element.style.visibility = "hidden";
         document.onclick = Awe.__savedDocumentOnClickCallbacks.pop();
       }
       if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
