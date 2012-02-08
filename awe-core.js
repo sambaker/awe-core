@@ -122,7 +122,7 @@
    * purpose: Show/hide popup behavior for DIV elements.
    *
    */
-  Awe.popup = function(id) {
+  Awe.popup = function(id, dismissedCallback) {
   
     var _i = this;  
     var element = document.getElementById(id);
@@ -137,6 +137,7 @@
           e = e || window.event;
           if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
             _i.hide(true);
+            if(dismissedCallback) dismissedCallback();
           }
           return;
         });
