@@ -9,6 +9,9 @@
 
   // Create and export Awe
   var Awe = {}
+  
+  // Stack of saved document.onclick handlers
+  Awe.__savedDocumentOnClickCallbacks = [];
 
   // Helpers
   Awe.isArray = function(o) {
@@ -81,9 +84,10 @@
     }
   }
   
-  // Create an HTML element of the given type and attach to the given parent if not null.
-  // The config object can contain styles, attrs, a class and a background sprite to apply
-  // to the element
+  /* Create an HTML element of the given type and attach to the given parent if not null.
+   * The config object can contain styles, attrs, a class and a background sprite to apply
+   * to the element
+   */
   Awe.createElement = function(type, parent, config) {
     var k;
     var el = document.createElement(type);
@@ -112,13 +116,52 @@
     return el;
   }
 
+  /* 
+   * method: Awe.popup
+   *
+   * purpose: Implement show/hide behavior on a popup DIV element.
+   *
+   */
+  Awe.popup = function(id) {
+  
+    _i = this;  
+    _i._el = document.getElementById(id);
+    
+    if(!_i._element) throw "invalid id";
+    
+    _i.show = function() {
+      if(_i._el.style.visibility != "visible") {
+        _i._el.style.visibility = "visible";
+        Awe.__savedDocumentOnClickCallbacks.push(document.onclick);
+        document.onclick = (function(e) {
+          e = e || window.event;
+          if (!xHasPoint(popup, e.x, e.y)) { // TODO Handle x dependency
+            _i.hide(true);
+          }
+          return;
+        });
+        // if call context is a click handler
+        if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
+      }
+    }
+    
+    _i.hide = function(bubbleCurrentEvent) {
+      var popup = document.getElementById(id);
+      if(popup && popup.style.visibility != "hidden") {
+        popup.style.visibility = "hidden";
+        document.onclick = Awe.__savedDocumentOnClickCallbacks.pop();
+      }
+      if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
+      return;
+    }
+  }
+  
   /*
    * method: Awe.enableDrag
    * 
    * purpose: enable drag on a DOM element
    *
-   */
-   
+   */  
   Awe.enableDrag = function(el, config) {
   
     config = config || {};

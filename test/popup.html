@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>blur test</title>
+  <style>    
+    body {
+      overflow:hidden;
+    }
+    .popup {
+      position: absolute;
+      z-index: 10;
+      width: 200px;
+      height: 300px;
+      padding: 10px;
+      font: 15px arial,sans-serif;
+      visibility: hidden;
+    }
+    .one {
+      top: 200px;
+      left: 200px;
+      background-color: #fcc;
+    }
+    .two {
+      top: 250px;
+      left: 400px;
+      background-color: #ccf;
+    }
+  </style>
+
+  <!-- TODO Handle x dependency -->  
+  <script src="javascripts/x/x.js"></script>
+  <script src="javascripts/x/lib/xhaspoint.js"></script>
+  <script>
+
+    function _TR(s) { console.log(s); }
+    
+    function startup() {
+      document.getElementById("i2").onclick = function(e) {
+        _TR("button.i2 was clicked");
+      };
+      document.getElementById("i4").onclick = function(e) {
+        _TR("button.i4 was clicked");
+        Awe.popup("popup1").show();
+      };
+      document.getElementById("i5").onclick = function(e) {
+        _TR("button.i5 was clicked");
+        Awe.popup("popup2").show();
+      };
+      document.getElementById("popup1_button").onclick = function(e) {
+        Awe.popup("popup2").show();
+      };
+      document.getElementById("popup2_button").onclick = function(e) {
+        Awe.popup("popup2").hide();
+      };
+    }
+    
+    // bootstrap
+    window.onload = startup;
+  </script>
+</head>
+
+<body>
+  <div id="mainCon">
+  <h1>oh, blur me now!</h1>
+  <div id="form1">
+  <input id="i1" type="text" value="click here to give it focus" /><br/>
+  <input id="i2" type="button" value="click here to give it focus" /><br/>
+  <input id="i3" type="checkbox" value="click here to give it focus" /><br/>
+  <hr/>
+  <input id="i4" type="button" value="show popup #1" /><br/>
+  <input id="i5" type="button" value="show popup #2" /><br/>  
+  </div>
+  <div id="popup1" class="popup one">
+    This is an absolute positioned pop-up<br/>
+    <input id="popup1_textbox" type="text" value="type here" /><br/>
+    <input id="popup1_button" type="button" value="show sub-pop up" /><br/>
+  </div>
+  <div id="popup2" class="popup two">
+    This is an absolute positioned pop-up<br/>
+    <input id="popup2_textbox" type="text" value="type here" /><br/>
+    <input id="popup2_button" type="button" value="done" /><br/>
+  </div>
+  </div>
+</body>
+</html>
