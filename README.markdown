@@ -18,14 +18,10 @@ We will not be supporting all browsers. The expected supported browser set is:
 
 There are no external dependencies besides having a sufficiently compliant browser.
 
-Including as a submodule
-------------------------
+Installing
+----------
 
-If you have a git project and you want to include this repository as a submodule run these commands:
-
-    git submodule add https://github.com/sambaker/awe-core.git [destination folder]
-    git submodule init
-    git submodule update
+Copy the awe-*.js files to you project's javascript directory.
     
 AWE and Rails Apps
 ------------------
