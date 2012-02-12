@@ -1,4 +1,4 @@
 # inventory of files, for packaging tools like awe-rails
 awe-core.js
 awe-state-machine.js
-
+awe-ui.js

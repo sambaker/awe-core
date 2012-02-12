@@ -9,9 +9,6 @@
 
   // Create and export Awe
   var Awe = {}
-  
-  // Stack of saved document.onclick handlers
-  Awe.__savedDocumentOnClickCallbacks = [];
 
   // Helpers
   Awe.isArray = function(o) {
@@ -116,45 +113,6 @@
     return el;
   }
 
-  /* 
-   * method: Awe.popup
-   *
-   * purpose: Show/hide popup behavior for DIV elements.
-   *
-   */
-  Awe.popup = function(id, dismissedCallback) {
-  
-    var _i = this;  
-    var element = document.getElementById(id);
-    
-    if(!element) throw "cannot find element with given id";
-    
-    _i.show = function() {
-      if(element.style.visibility != "visible") {
-        element.style.visibility = "visible";
-        Awe.__savedDocumentOnClickCallbacks.push(document.onclick);
-        document.onclick = (function(e) {
-          e = e || window.event;
-          if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
-            _i.hide(true);
-            if(dismissedCallback) dismissedCallback();
-          }
-          return;
-        });
-        // if call context is a click handler
-        if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
-      }
-    }
-    
-    _i.hide = function(bubbleCurrentEvent) {
-      if(element.style.visibility != "hidden") {
-        element.style.visibility = "hidden";
-        document.onclick = Awe.__savedDocumentOnClickCallbacks.pop();
-      }
-      if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
-      return;
-    }
-  }
   
   /*
    * method: Awe.enableDrag

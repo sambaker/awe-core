@@ -26,9 +26,13 @@
     }
   </style>
 
-  <!-- TODO Handle x dependency -->  
-  <script src="javascripts/x/x.js"></script>
-  <script src="javascripts/x/lib/xhaspoint.js"></script>
+  <script src="x/x.js"></script>
+  <script src="x/lib/xhaspoint.js"></script>
+  
+  <script src="../awe-core.js"></script>
+  <script src="../awe-state-machine.js"></script>
+  <script src="../awe-ui.js"></script>
+
   <script>
 
     function _TR(s) { console.log(s); }
@@ -39,17 +43,17 @@
       };
       document.getElementById("i4").onclick = function(e) {
         _TR("button.i4 was clicked");
-        Awe.popup("popup1").show();
+        new Awe.uiPopup("popup1").show();
       };
       document.getElementById("i5").onclick = function(e) {
         _TR("button.i5 was clicked");
-        Awe.popup("popup2").show();
+        new Awe.uiPopup("popup2").show();
       };
       document.getElementById("popup1_button").onclick = function(e) {
-        Awe.popup("popup2").show();
+        new Awe.uiPopup("popup2").show();
       };
       document.getElementById("popup2_button").onclick = function(e) {
-        Awe.popup("popup2").hide();
+        new Awe.uiPopup("popup2").hide();
       };
     }
     
