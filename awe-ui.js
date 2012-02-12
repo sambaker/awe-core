@@ -30,6 +30,8 @@
    */
   Awe.uiPopup = function(element) {
   
+    if ( !(this instanceof Awe.uiPopup) ) return new Awe.uiPopup(element);
+      
     var _i = this;
     
     element = ensureElement(element);
