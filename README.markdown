@@ -22,6 +22,8 @@ Installing
 ----------
 
 Copy the awe-*.js files to you project's javascript directory.
+
+Currently, awe-ui depends on the *x* library from cross-browser.com. 
     
 AWE and Rails Apps
 ------------------
