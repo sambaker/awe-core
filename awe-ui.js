@@ -7,7 +7,7 @@
 (function(Awe, global, document, undefined) {
 
   // Stack of saved document.onclick handlers
-  var _savedDocumentOnClickCallbacks = [];
+  var _popupStack = [];
   
   /* 
    * purpose: Helper function to ensure that we have an element. Allows called 
@@ -41,7 +41,7 @@
     _i.show = function(dismissedCallback) {
       if(element.style.visibility != "visible") {
         element.style.visibility = "visible";
-        _savedDocumentOnClickCallbacks.push(document.onclick);
+        _popupStack.push({element:element,previousOnClickCb:document.onclick});
         document.onclick = (function(e) {
           e = e || window.event;
           if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
@@ -58,7 +58,7 @@
     _i.hide = function(bubbleCurrentEvent) {
       if(element.style.visibility != "hidden") {
         element.style.visibility = "hidden";
-        document.onclick = _savedDocumentOnClickCallbacks.pop();
+        document.onclick = _popupStack.pop().previousOnClickCb;
       }
       if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
       return;
