@@ -48,24 +48,24 @@
       };
       document.getElementById("i4").onclick = function(e) {
         _TR("button.i4 was clicked");
-        Awe.uiPopup("popup1").show();
+        Awe.showPopup("popup1");
       };
       document.getElementById("i5").onclick = function(e) {
         _TR("button.i5 was clicked");
-        Awe.uiPopup("popup2").show();
+        Awe.showPopup("popup2");
       };
       document.getElementById("i6").onclick = function(e) {
         _TR("button.i6 was clicked");
-        Awe.uiPopup("popup3").show();
+        Awe.showPopup("popup3");
       };
       document.getElementById("popup1_button").onclick = function(e) {
-        Awe.uiPopup("popup2").show(null,"popup1" /*parent*/);
+        Awe.showPopup("popup2", null /*dismissedCallback*/, "popup1" /*parent*/);
       };
       document.getElementById("popup2_button").onclick = function(e) {
-        Awe.uiPopup("popup2").hide();
+        Awe.hidePopup("popup2");
       };
       document.getElementById("popup3_button").onclick = function(e) {
-        Awe.uiPopup("popup3").hide();
+        Awe.hidePopup("popup3");
       };
     }
     
