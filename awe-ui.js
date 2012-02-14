@@ -38,19 +38,21 @@
     
     if(!element) throw "cannot find element with given id";
     
-    _i.show = function(dismissedCallback) {
+    _i.show = function(dismissedCallback, parent) {
       if(element.style.visibility != "visible") {
         element.style.visibility = "visible";
-        _popupStack.push({element:element,previousOnClickCb:document.onclick});
+        _popupStack.push({
+          element:element, 
+          parent:parent, 
+          previousOnClickCb:document.onclick});
         document.onclick = (function(e) {
           e = e || window.event;
-          if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
+          if (!xHasPoint(element, e.x, e.y)) {
             _i.hide(true);
             if(dismissedCallback) dismissedCallback();
           }
           return;
         });
-        // if call context is a click handler
         if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
       }
     }
