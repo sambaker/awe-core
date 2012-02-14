@@ -46,6 +46,11 @@
   Awe.sign = function(n) {
     return (n < 0) ? -1 : 1;
   }
+  
+  // Ensure n is a positive value or zero.
+  Awe.positiveOrZero = function(n) {
+    return (n > 0) ? n : 0;
+  }
 
   // Clamp a number between -1 and 1 before passing to Math.acos to prevent an exception.
   // Ensure that this makes sense for your parameters - it is assumed they will be close to
