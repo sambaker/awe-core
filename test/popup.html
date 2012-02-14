@@ -59,7 +59,7 @@
         Awe.uiPopup("popup3").show();
       };
       document.getElementById("popup1_button").onclick = function(e) {
-        Awe.uiPopup("popup2").show();
+        Awe.uiPopup("popup2").show(null,"popup1" /*parent*/);
       };
       document.getElementById("popup2_button").onclick = function(e) {
         Awe.uiPopup("popup2").hide();

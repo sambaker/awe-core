@@ -16,7 +16,9 @@
    */
   var ensureElement = function(element) {
     if(typeof(element) == "string") {
-      return document.getElementById(element);
+      var el = document.getElementById(element);
+      if(!el) throw "cannot find element with id '" + element + "'";
+      return el;
     } else {
       return element;
     }
@@ -31,20 +33,35 @@
   Awe.uiPopup = function(element) {
   
     if ( !(this instanceof Awe.uiPopup) ) return new Awe.uiPopup(element);
+
+    element = ensureElement(element);
       
     var _i = this;
+            
+    _i.show = function(dismissedCallback, parentPopup) {
+      
+      parentPopup = ensureElement(parentPopup);
+      
+      var top = _popupStack[_popupStack.length-1];
     
-    element = ensureElement(element);
-    
-    if(!element) throw "cannot find element with given id";
-    
-    _i.show = function(dismissedCallback, parent) {
+      while(top && top.element != parentPopup) {
+        _TR("rolling back pop-ups");
+        top.element.style.visibility = "hidden";
+        if(top.dismissedCallback) top.dismissedCallback();
+        document.onclick = top.previousOnClickCb;
+        top = _popupStack.pop();
+      }
+      
       if(element.style.visibility != "visible") {
         element.style.visibility = "visible";
+      
         _popupStack.push({
           element:element, 
-          parent:parent, 
-          previousOnClickCb:document.onclick});
+          parentPopup:parentPopup,
+          dismissedCallback:dismissedCallback,
+          previousOnClickCb:document.onclick
+        });
+      
         document.onclick = (function(e) {
           e = e || window.event;
           if (!xHasPoint(element, e.x, e.y)) {
@@ -53,15 +70,18 @@
           }
           return;
         });
+      
         if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
       }
     }
     
     _i.hide = function(bubbleCurrentEvent) {
+    
       if(element.style.visibility != "hidden") {
         element.style.visibility = "hidden";
         document.onclick = _popupStack.pop().previousOnClickCb;
       }
+    
       if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
       return;
     }    
