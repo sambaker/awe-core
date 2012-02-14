@@ -81,9 +81,10 @@
     }
   }
   
-  // Create an HTML element of the given type and attach to the given parent if not null.
-  // The config object can contain styles, attrs, a class and a background sprite to apply
-  // to the element
+  /* Create an HTML element of the given type and attach to the given parent if not null.
+   * The config object can contain styles, attrs, a class and a background sprite to apply
+   * to the element
+   */
   Awe.createElement = function(type, parent, config) {
     var k;
     var el = document.createElement(type);
@@ -112,13 +113,13 @@
     return el;
   }
 
+  
   /*
    * method: Awe.enableDrag
    * 
    * purpose: enable drag on a DOM element
    *
-   */
-   
+   */  
   Awe.enableDrag = function(el, config) {
   
     config = config || {};

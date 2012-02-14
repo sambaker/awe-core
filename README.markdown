@@ -18,14 +18,17 @@ We will not be supporting all browsers. The expected supported browser set is:
 
 There are no external dependencies besides having a sufficiently compliant browser.
 
-Including as a submodule
-------------------------
+Installing
+----------
 
-If you have a git project and you want to include this repository as a submodule run these commands:
+Copy the awe-*.js files to you project's javascript directory.
 
-    git submodule add https://github.com/sambaker/awe-core.git [destination folder]
-    git submodule init
-    git submodule update
+Currently, awe-ui depends on the *x* library from cross-browser.com. 
+    
+AWE and Rails Apps
+------------------
+
+There is a nifty gem that will make it easy to install AWE into the Rails 3.1 asset pipeline and keep it up to date. See https://github.com/shyam-habarakada/awe-rails
 
 How to document
 ---------------
@@ -84,4 +87,4 @@ Preliminary documentation
     Awe.disableDrag(element)
     
     // Classes
-    Awe.Color Ð example, color = Awe.Color("#f8f8f8")
+    Awe.Color ï¿½ example, color = Awe.Color("#f8f8f8")
