@@ -48,7 +48,7 @@
                         
     parentPopup = ensureElement(parentPopup);
     
-    var top = (_popupStack.length > 0) _popupStack[_popupStack.length-1] : null;
+    var top = (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
   
     while(top && top.element != parentPopup) {
       top.element.style.visibility = "hidden";
@@ -90,7 +90,7 @@
     
     element = ensureElement(element);
     
-    var top = (_popupStack.length > 0) _popupStack[_popupStack.length-1] : null;
+    var top = (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
 
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
