@@ -27,6 +27,14 @@ If you have a git project and you want to include this repository as a submodule
     git submodule init
     git submodule update
 
+How to document
+---------------
+
+When adding Javascript files to the library, add those filenames to doc/index.html and document the functionality you add using Wiki Creole formatting
+(http://www.wikicreole.org/).
+
+Load doc/index.html into a browser to test the formatting of the docs.
+
 Preliminary documentation
 -------------------------
 
