@@ -6,8 +6,10 @@
  */
 (function(Awe, global, document, undefined) {
 
-  // Stack of saved document.onclick handlers
+  // Stack of saved document.onmousedown handlers
   var _popupStack = [];
+  
+  var _xa = new xAnimation();
   
   /* 
    * purpose: Helper function to ensure that we have an element. Allows called 
@@ -53,7 +55,7 @@
     while(top && top.element != parentPopup) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onclick = top.previousOnClickCb;
+      document.onmousedown = top.previousonmousedownCb;
       top = _popupStack.pop();
     }
       
@@ -64,10 +66,10 @@
         element:element, 
         parentPopup:parentPopup,
         dismissedCallback:dismissedCallback,
-        previousOnClickCb:document.onclick
+        previousonmousedownCb:document.onmousedown
       });
     
-      document.onclick = (function(e) {
+      document.onmousedown = (function(e) {
         e = e || window.event;
         if (!xHasPoint(element, e.pageX, e.pageY)) {
           Awe.hidePopup(element, true);
@@ -95,14 +97,14 @@
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onclick = top.previousOnClickCb;
+      document.onmousedown = top.previousonmousedownCb;
       top = _popupStack.pop();
     }
        
     if(element.style.visibility != "hidden") {
       element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onclick = _popupStack.pop().previousOnClickCb;
+      document.onmousedown = _popupStack.pop().previousonmousedownCb;
     }
   
     if(!dismissing && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
