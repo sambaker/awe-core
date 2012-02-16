@@ -69,7 +69,7 @@
     
       document.onclick = (function(e) {
         e = e || window.event;
-        if (!xHasPoint(element, e.x, e.y)) {
+        if (!xHasPoint(element, e.pageX, e.pageY)) {
           Awe.hidePopup(element, true);
         }
         return;
