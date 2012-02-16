@@ -61,6 +61,7 @@
       
     if(element.style.visibility != "visible") {
       element.style.visibility = "visible";
+      element.style.opacity = "";
     
       _popupStack.push({
         element:element, 
@@ -100,12 +101,15 @@
       document.onmousedown = top.previousonmousedownCb;
       top = _popupStack.pop();
     }
-       
-    if(element.style.visibility != "hidden") {
-      element.style.visibility = "hidden";
-      if(top.dismissedCallback) top.dismissedCallback();
-      document.onmousedown = _popupStack.pop().previousonmousedownCb;
-    }
+    
+    _xa.opacity(element,0,300,0,0,function() {
+      if(element.style.visibility != "hidden") {
+        element.style.visibility = "hidden";
+        if(top.dismissedCallback) top.dismissedCallback();
+        document.onmousedown = _popupStack.pop().previousonmousedownCb;
+      }
+    });
+      
   
     if(!dismissing && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
     return;
