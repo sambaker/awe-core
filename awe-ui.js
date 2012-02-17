@@ -28,6 +28,14 @@
   
   
   /* 
+   * purpose: safely get the top of _popupStack. Returns null if stack is empty.
+   */
+  var getTopOfPopupStack = function() {
+    return (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
+  }
+  
+  
+  /* 
    * method: Awe.uiPopup
    *
    * Attach pop-up behavior to the given element and ensure it is visible. this
@@ -50,68 +58,66 @@
                         
     parentPopup = ensureElement(parentPopup);
     
-    var top = (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
-  
+    var top = getTopOfPopupStack();
     while(top && top.element != parentPopup) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
       document.onmousedown = top.previousonmousedownCb;
-      top = _popupStack.pop();
+      _popupStack.pop();
+      top = getTopOfPopupStack();
     }
       
-    if(element.style.visibility != "visible") {
-      element.style.visibility = "visible";
-      element.style.opacity = "";
-    
-      _popupStack.push({
-        element:element, 
-        parentPopup:parentPopup,
-        dismissedCallback:dismissedCallback,
-        previousonmousedownCb:document.onmousedown
-      });
-    
-      document.onmousedown = (function(e) {
-        e = e || window.event;
-        if (!xHasPoint(element, e.pageX, e.pageY)) {
-          Awe.hidePopup(element, true);
-        }
-        return;
-      });
-    
-      if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
-    }
+    element.style.visibility = "visible";
+  
+    _popupStack.push({
+      element:element,
+      opacity:element.style.opacity, // remember
+      parentPopup:parentPopup,
+      dismissedCallback:dismissedCallback,
+      previousonmousedownCb:document.onmousedown
+    });
+  
+    document.onmousedown = (function(e) {
+      e = e || window.event;
+      if (!xHasPoint(element, e.pageX, e.pageY)) {
+        Awe.hidePopup(element, true);
+      }
+      return;
+    });
   }
   
   /* 
    * method: Awe.hidePopup
    *
    * If element is the current top-most popup, hide it. Otherwise, hide all popups 
-   * in the current stack starting from the top upto the element. If element is not
-   * in the stack, has the side-effect of dimissing all popups.
+   * in the current stack starting from the top upto and including the element. 
+   * If element is not in the stack, has the side-effect of dimissing all popups.
    */
   Awe.hidePopup = function(element, dismissing) {
     
     element = ensureElement(element);
     
-    var top = (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
+    var top = getTopOfPopupStack();
 
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
       document.onmousedown = top.previousonmousedownCb;
-      top = _popupStack.pop();
+      _popupStack.pop();
+      top = getTopOfPopupStack();
     }
+    
+    if(top.dismissedCallback) top.dismissedCallback();
+    document.onmousedown = top.previousonmousedownCb;
+    _popupStack.pop();
     
     _xa.opacity(element,0,300,0,0,function() {
       if(element.style.visibility != "hidden") {
         element.style.visibility = "hidden";
-        if(top.dismissedCallback) top.dismissedCallback();
-        document.onmousedown = _popupStack.pop().previousonmousedownCb;
+        element.style.opacity = top.opacity; // restore
       }
     });
-      
-  
-    if(!dismissing && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
+
     return;
   }
     
