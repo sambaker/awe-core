@@ -11,6 +11,8 @@
   
   var _xa = new xAnimation();
   
+  var _DIMISS_DURATION = 100; // ms
+  
   /* 
    * purpose: Helper function to ensure that we have an element. Allows called 
    * of ui* functions to pass in either an HTML element object or an id string, 
@@ -113,7 +115,7 @@
     document.onmousedown = top.previousonmousedownCb;
     _popupStack.pop();
 
-    _xa.opacity(element,0,300,0,0,function() {
+    _xa.opacity(element,0,_DIMISS_DURATION,0,0,function() {
       if(element.style.visibility != "hidden") {
         element.style.visibility = "hidden";
         element.style.opacity = top.opacity; // restore
