@@ -98,7 +98,7 @@
     element = ensureElement(element);
     
     var top = getTopOfPopupStack();
-
+    
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
@@ -106,11 +106,13 @@
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
+
+    if(!top) throw 'Element not found in the popup stack (Awe.hidePopup)';
     
     if(top.dismissedCallback) top.dismissedCallback();
     document.onmousedown = top.previousonmousedownCb;
     _popupStack.pop();
-    
+
     _xa.opacity(element,0,300,0,0,function() {
       if(element.style.visibility != "hidden") {
         element.style.visibility = "hidden";
