@@ -76,10 +76,10 @@
       if (_i.currentStateId) {
         var currentState = _i.states[_i.currentStateId];
         
-        if (!_i.currentStateDone && currentState.allowOnly && !currentState.allowOnly.indexOf(id)) {
+        if (!_i.currentStateDone && currentState.allowOnly && currentState.allowOnly.indexOf(id) < 0) {
           return false;
         }
-        if (!_i.currentStateDone && currentState.doNotAllow && currentState.doNotAllow.indexOf(id)) {
+        if (!_i.currentStateDone && currentState.doNotAllow && currentState.doNotAllow.indexOf(id) >= 0) {
           return false;
         }
         
