@@ -6,9 +6,9 @@
  */
 (function(Awe, global, document, undefined) {
 
-  // Stack of saved document.onclick handlers
-  var _savedDocumentOnClickCallbacks = [];
-  
+  // Stack of saved document.onmousedown handlers
+  var _popupStack = [];
+    
   /* 
    * purpose: Helper function to ensure that we have an element. Allows called 
    * of ui* functions to pass in either an HTML element object or an id string, 
@@ -16,53 +16,102 @@
    */
   var ensureElement = function(element) {
     if(typeof(element) == "string") {
-      return document.getElementById(element);
+      var el = document.getElementById(element);
+      if(!el) throw "cannot find element with id '" + element + "'";
+      return el;
     } else {
       return element;
     }
   }
   
+  
+  /* 
+   * purpose: safely get the top of _popupStack. Returns null if stack is empty.
+   */
+  var getTopOfPopupStack = function() {
+    return (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
+  }
+  
+  
   /* 
    * method: Awe.uiPopup
    *
-   * purpose: Attach show/hide popup behavior to an element.
+   * Attach pop-up behavior to the given element and ensure it is visible. this
+   * means that clicking anywhere outside the given element will cause the element
+   * to be hidden and dismissedCallback, if one is provided will be invoked.
    *
+   * Popups can be nested by specifying a parentPopup.
+   *
+   * If no parentPopup is provided, this method will cause any and all previously
+   * shown popups to be automatically dismissed, and for their respective 
+   * dismissedCallbacks be invoked.
+   *
+   * If current top-most popup is not the parentPopup, the popup stack will be 
+   * popped and dismissed until a popup matching the given parent is found or until
+   * no more popups are visible.
    */
-  Awe.uiPopup = function(element) {
+  Awe.showPopup = function(element, dismissedCallback, parentPopup) {
   
-    if ( !(this instanceof Awe.uiPopup) ) return new Awe.uiPopup(element);
+    element = ensureElement(element);
+                        
+    parentPopup = ensureElement(parentPopup);
+    
+    var top = getTopOfPopupStack();
+    while(top && top.element != parentPopup) {
+      top.element.style.visibility = "hidden";
+      if(top.dismissedCallback) top.dismissedCallback();
+      document.onmousedown = top.previousonmousedownCb;
+      _popupStack.pop();
+      top = getTopOfPopupStack();
+    }
       
-    var _i = this;
+    element.style.visibility = "visible";
+  
+    _popupStack.push({
+      element:element,
+      parentPopup:parentPopup,
+      dismissedCallback:dismissedCallback,
+      previousonmousedownCb:document.onmousedown
+    });
+  
+    document.onmousedown = (function(e) {
+      e = e || window.event;
+      if (!xHasPoint(element, e.pageX, e.pageY)) {
+        Awe.hidePopup(element, true);
+      }
+      return;
+    });
+  }
+  
+  /* 
+   * method: Awe.hidePopup
+   *
+   * If element is the current top-most popup, hide it. Otherwise, hide all popups 
+   * in the current stack starting from the top upto and including the element. 
+   * If element is not in the stack, has the side-effect of dimissing all popups.
+   */
+  Awe.hidePopup = function(element, dismissing) {
     
     element = ensureElement(element);
     
-    if(!element) throw "cannot find element with given id";
+    var top = getTopOfPopupStack();
     
-    _i.show = function(dismissedCallback) {
-      if(element.style.visibility != "visible") {
-        element.style.visibility = "visible";
-        _savedDocumentOnClickCallbacks.push(document.onclick);
-        document.onclick = (function(e) {
-          e = e || window.event;
-          if (!xHasPoint(element, e.x, e.y)) { // TODO Handle x dependency
-            _i.hide(true);
-            if(dismissedCallback) dismissedCallback();
-          }
-          return;
-        });
-        // if call context is a click handler
-        if(window.event && window.event.type == "click") Awe.cancelEvent(window.event); 
-      }
+    while(top && top.element != element) {
+      top.element.style.visibility = "hidden";
+      if(top.dismissedCallback) top.dismissedCallback();
+      document.onmousedown = top.previousonmousedownCb;
+      _popupStack.pop();
+      top = getTopOfPopupStack();
     }
+
+    if(!top) throw 'Element not found in the popup stack (Awe.hidePopup)';
     
-    _i.hide = function(bubbleCurrentEvent) {
-      if(element.style.visibility != "hidden") {
-        element.style.visibility = "hidden";
-        document.onclick = _savedDocumentOnClickCallbacks.pop();
-      }
-      if(!bubbleCurrentEvent && window.event && window.event.type == "click") Awe.cancelEvent(window.event);
-      return;
-    }    
+    element.style.visibility = "hidden";
+    if(top.dismissedCallback) top.dismissedCallback();
+    document.onmousedown = top.previousonmousedownCb;
+    _popupStack.pop();
+
+    return;
   }
     
 })(Awe, this, document)

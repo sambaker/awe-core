@@ -24,6 +24,11 @@
       left: 400px;
       background-color: #ccf;
     }
+    .three {
+      top: 250px;
+      left: 50px;
+      background-color: #cfc;
+    }
   </style>
 
   <script src="x/x.js"></script>
@@ -43,17 +48,24 @@
       };
       document.getElementById("i4").onclick = function(e) {
         _TR("button.i4 was clicked");
-        Awe.uiPopup("popup1").show();
+        Awe.showPopup("popup1");
       };
       document.getElementById("i5").onclick = function(e) {
         _TR("button.i5 was clicked");
-        Awe.uiPopup("popup2").show();
+        Awe.showPopup("popup2");
+      };
+      document.getElementById("i6").onclick = function(e) {
+        _TR("button.i6 was clicked");
+        Awe.showPopup("popup3");
       };
       document.getElementById("popup1_button").onclick = function(e) {
-        Awe.uiPopup("popup2").show();
+        Awe.showPopup("popup2", null /*dismissedCallback*/, "popup1" /*parent*/);
       };
       document.getElementById("popup2_button").onclick = function(e) {
-        Awe.uiPopup("popup2").hide();
+        Awe.hidePopup("popup2");
+      };
+      document.getElementById("popup3_button").onclick = function(e) {
+        Awe.hidePopup("popup3");
       };
     }
     
@@ -64,25 +76,31 @@
 
 <body>
   <div id="mainCon">
-  <h1>oh, blur me now!</h1>
-  <div id="form1">
-  <input id="i1" type="text" value="click here to give it focus" /><br/>
-  <input id="i2" type="button" value="click here to give it focus" /><br/>
-  <input id="i3" type="checkbox" value="click here to give it focus" /><br/>
-  <hr/>
-  <input id="i4" type="button" value="show popup #1" /><br/>
-  <input id="i5" type="button" value="show popup #2" /><br/>  
-  </div>
-  <div id="popup1" class="popup one">
-    This is an absolute positioned pop-up<br/>
-    <input id="popup1_textbox" type="text" value="type here" /><br/>
-    <input id="popup1_button" type="button" value="show sub-pop up" /><br/>
-  </div>
-  <div id="popup2" class="popup two">
-    This is an absolute positioned pop-up<br/>
-    <input id="popup2_textbox" type="text" value="type here" /><br/>
-    <input id="popup2_button" type="button" value="done" /><br/>
-  </div>
+    <h1>oh, blur me now!</h1>
+    <div id="form1">
+    <input id="i1" type="text" value="click here to give it focus" /><br/>
+    <input id="i2" type="button" value="click here to give it focus" /><br/>
+    <input id="i3" type="checkbox" value="click here to give it focus" /><br/>
+    <hr/>
+    <input id="i4" type="button" value="show popup #1" /><br/>
+    <input id="i5" type="button" value="show popup #2" /><br/>  
+    <input id="i6" type="button" value="show popup #3" /><br/>  
+    </div>
+    <div id="popup1" class="popup one">
+      This is an absolute positioned pop-up<br/>
+      <input id="popup1_textbox" type="text" value="type here" /><br/>
+      <input id="popup1_button" type="button" value="show sub-pop up" /><br/>
+    </div>
+    <div id="popup2" class="popup two">
+      This is an absolute positioned pop-up<br/>
+      <input id="popup2_textbox" type="text" value="type here" /><br/>
+      <input id="popup2_button" type="button" value="done" /><br/>
+    </div>
+      <div id="popup3" class="popup three">
+      This is an absolute positioned pop-up<br/>
+      <input id="popup3_textbox" type="text" value="type here" /><br/>
+      <input id="popup3_button" type="button" value="done" /><br/>
+    </div>
   </div>
 </body>
 </html>
