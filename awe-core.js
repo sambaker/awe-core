@@ -7,17 +7,49 @@
 (function(global, document, namespace, undefined) {
   namespace = namespace || "Awe";
 
-  // Create and export Awe
+  // = Awe =
+  //
+  // This is a library of all-purpose, general utility functions contained within
+  // the {{{Awe}}} namespace.
+
+  // Create Awe
   var Awe = {}
 
-  // Helpers
+  // == Helpers ==
+  
+  // ** {{{ Awe.isArray(o) }}} **
+  //
+  // Determines whether an object is an array but not a string
+  //
+  // {{{o}}} is an object to test
+  //
+  // Returns {{{true}}} if the object is an array (but not a string) and {{{false}}} otherwise
+  
   Awe.isArray = function(o) {
     return o && o.constructor == Array.prototype.constructor;
   }
 
+  // ** {{{ Awe.isArrayOrString(o) }}} **
+  //
+  // Determines whether an object is an array or a string
+  //
+  // {{{o}}} is an object to test
+  //
+  // Returns {{{true}}} if the object is an array or a string and {{{false}}} otherwise
+
   Awe.isArrayOrString = function(o) {
-    return o && o.constructor == Array.prototype.constructor || o.constructor == String.prototype.constructor;
+    return o && (o.constructor == Array.prototype.constructor ||
+      o.constructor == String.prototype.constructor);
   }
+
+  // ** {{{ Awe.isType(o, type) }}} **
+  //
+  // Determines whether an object is a given type
+  //
+  // {{{o}}} is an object to test
+  // {{{type}}} is the constructor of the type to test
+  //
+  // Returns {{{true}}} if the object {{{o}}} is of type {{{type}}}
 
   Awe.isType = function(o, type) {
     return o && o.constructor == type.prototype.constructor;
@@ -38,8 +70,13 @@
   Awe.env.eventClick = Awe.env.inputTouch ? "touchend" : "click";
   
   // Clamp a number between min/max
-  Awe.clamp = function(n, min, max) {
-    return Math.min(Math.max(n, min), max);
+  Awe.clamp = function(n, range1, range2) {
+    if (range2 < range1) {
+      var t = range1;
+      range1 = range2;
+      range2 = t;
+    }
+    return Math.min(Math.max(n, range1), range2);
   }
 
   // Return -1 if n < 0 or 1 otherwise
@@ -124,20 +161,32 @@
   
     config = config || {};
     var filters = config.filters;
-    var updater = config.updater || new Awe.DragUpdaterTopLeft();
+    var updater = config.updater;
+    var hasAnimatingFilter = false;
     
     // Convert a single drag filter
     if (filters) {
       if (!Awe.isArray(filters)) {
         filters = [filters];
       }
+      Awe.forEach(filters, function(filter) {
+        if (filter.animates) {
+          hasAnimatingFilter = true;
+        }
+      });
     } else {
       filters = [];
     }
-  
+
     // Drag state
     var touch = {};
 
+    // Animation state is an object used during filter-controlled animations containing:
+    //  - animationTime
+    //  - velocity
+    //  - pos
+    var animationState = {};
+    
     function getClientPos(evt)
     {
       var p;
@@ -153,6 +202,23 @@
       return p
     }
   
+    function updateAnimationState(evt) {
+      if (hasAnimatingFilter) {
+        if (touch.dragging) {
+          animationState._last = Date.now() * 0.001;
+          animationState.animationTime = 0;
+          animationState.deltaTime = 0;
+          animationState.velocity = evt.velocity;
+          animationState.pos = evt.pos;
+        } else {
+          var t = Date.now() * 0.001;
+          animationState.deltaTime = t - animationState._last;
+          animationState.animationTime += animationState.deltaTime;
+          animationState._last = t;
+        }
+      }
+    }
+    
     function processDrag(clientPos, pos, start) {
       if (touch.now) {
         touch.maxDistanceSquared = Math.max(touch.maxDistanceSquared, (touch.now.x - touch.start.x) * (touch.now.x - touch.start.x) + (touch.now.y - touch.start.y) * (touch.now.y - touch.start.y));
@@ -165,7 +231,8 @@
         clientPos: { x: clientPos.x, y: clientPos.y },
         pos: { x: pos.x, y: pos.y },
         dragTime: (Date.now() - touch.startTime) * 0.001,
-        maxDistanceSquared: touch.maxDistanceSquared
+        maxDistanceSquared: touch.maxDistanceSquared,
+        velocity: { x: 0, y: 0 }
       }
       if (touch.lastDrag) {
         newDrag.clientDelta = {
@@ -176,10 +243,16 @@
           x: newDrag.pos.x - touch.lastDrag.pos.x,
           y: newDrag.pos.y - touch.lastDrag.pos.y
         }
+        var dt = newDrag.dragTime - touch.lastDrag.dragTime;
+        if (dt) {
+          newDrag.velocity.x = newDrag.delta.x / dt;
+          newDrag.velocity.y = newDrag.delta.y / dt;
+        }
       } else {
         newDrag.clientDelta = { x: 0, y: 0 };
         newDrag.delta = { x: 0, y: 0 };
       }
+      
       
       // Copy current drag state to last
       touch.lastDrag = {
@@ -187,9 +260,12 @@
         pos: { x: newDrag.pos.x, y: newDrag.pos.y },
         delta: { x: newDrag.delta.x, y: newDrag.delta.y },
         clientDelta: { x: newDrag.clientDelta.x, y: newDrag.clientDelta.y },
+        velocity: { x: newDrag.velocity.x, y: newDrag.velocity.y },
         dragTime: newDrag.dragTime,
         maxDistanceSquared: newDrag.maxDistanceSquared
       }
+      
+      updateAnimationState(newDrag);
       
       return newDrag;
     }
@@ -198,6 +274,7 @@
       return touch.lastDrag && {
         clientPos: touch.lastDrag.clientPos,
         pos: touch.lastDrag.pos,
+        velocity: touch.lastDrag.velocity,
         clientDelta: { x: 0, y: 0 },
         delta: { x: 0, y: 0 },
         dragTime: (Date.now() - touch.startTime) * 0.001,
@@ -205,23 +282,62 @@
       }
     }
     
+    function endAnimation() {
+      if (touch.updateIntervalId) {
+        // Call end on any remaining animating filters
+        Awe.forEach(filters, function(filter) {
+          if (filter.animates && filter.end) {
+            filter.end();
+          }
+        });
+
+        if (updater.end) {
+          updater.end();
+        }
+        clearInterval(touch.updateIntervalId);
+        touch.updateIntervalId = null;
+      }
+    }
+    
     // Per-frame updates
-    function dragUpdate(evt) {
-      var clientPos = touch.now || touch.start;
-      clientPos = { x: clientPos.x, y: clientPos.y };
-      var pos;
+    
+    function dragUpdateAnimating() {
+      updateAnimationState();
+      var animationsRunning = false;
       Awe.forEach(filters, function(filter) {
-        if (!pos && filter.animating) {
-          pos = filter.animate();
+        if (filter.animates) {
+          animationsRunning = animationsRunning || !filter.animate(animationState);
         }
       });
-      if (pos) {
-        updater.move(el, pos);
-        config.onChange(processDrag(clientPos, pos));
+
+      if (animationsRunning) {
+        var pos = { x: animationState.pos.x, y: animationState.pos.y };
+        var drag = processDrag(pos, pos);
+        updater.move(el, drag);
+        // TODO: Should this callback be called after release?
+        //config.onDragMove(processDrag(clientPos, pos));
+      } else {
+        // Animation is done
+        endAnimation();
       }
-      if (config.onUpdate) {
-        var drag = updateDrag();
-        drag && config.onUpdate(drag);
+    }
+
+    function dragUpdateDragging() {
+      var clientPos = touch.now || touch.start;
+      clientPos = { x: clientPos.x, y: clientPos.y };
+      var drag = updateDrag();
+      if (drag) {
+        if (config.onDragUpdate) {
+          config.onDragUpdate(drag);
+        }
+      }
+    }
+    
+    function dragUpdate(evt) {
+      if (touch.dragging) {
+        dragUpdateDragging();
+      } else {
+        dragUpdateAnimating();
       }
     }
       
@@ -230,32 +346,38 @@
       touch.now = getClientPos(evt);
       var pos = applyFilters(touch.now);
       var drag = processDrag(touch.now, pos);
-      if (config.onChange) {
-        config.onChange(drag);
+      if (updater && updater.move) {
+        updater.move(el, drag);
+      }
+      if (config.onDragMove) {
+        config.onDragMove(drag);
       }
     }
     
-    function dragEnd(evt) {
+    function dragEnd(evt, immediate) {
       if (!touch.dragging) {
         return;
       }
+      touch.dragging = false;
       evt && Awe.cancelEvent(evt);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
       Awe.forEach(filters, function(filter) {
-        if (filter.end) {
+        if ((immediate || !filter.animates) && filter.end) {
           filter.end();
         }
       });
-      if (updater.end) {
+      if (!hasAnimatingFilter && updater.end) {
         updater.end();
       }
-      if (config.onRelease && evt) {
+      // TODO: Figure out how whether release events are still appropriate here when there's an
+      // animating filter
+      if (config.onDragEnd && evt) {
         var pos = getClientPos(evt);
-        config.onRelease(processDrag(pos, pos));
+        config.onDragEnd(processDrag(pos, pos));
       }
-      if (touch.updateIntervalId) {
+      if (touch.updateIntervalId && !hasAnimatingFilter) {
         clearInterval(touch.updateIntervalId);
         touch.updateIntervalId = null;
       }
@@ -270,6 +392,10 @@
     
     function dragStart(evt) {
       Awe.cancelEvent(evt);
+      
+      // Cancel any existing animation
+      endAnimation();
+      
       touch.dragging = true;
       touch.anchor = { x: 0, y: 0 }
       // Calculate the position without the anchor
@@ -287,20 +413,28 @@
       
       var pos = touch.start;
       Awe.forEach(filters, function(filter) {
-        pos = filter.start(el, pos) || pos;
+        if (filter.start) {
+          pos = filter.start(el, pos) || pos;
+        }
       });
-      if (updater.start) {
-        updater.start(el, pos);
-      }
-  
+
       var pos = applyFilters(touch.now);
       
       var drag = processDrag(touch.now, pos);
+
+      if (updater.start) {
+        updater.start(el, drag);
+      }
+
+      if (config.onDragStart) {
+        config.onDragStart(drag);
+      }
+
       xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
       xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
-      if (config.onUpdate) {
-        touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 33);
-      }
+//      if (config.onDragUpdate) {
+      touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 16);
+//      }
     }
     
     xAddEventListener(el, Awe.env.eventDragStart, dragStart);
@@ -308,7 +442,7 @@
     el._disableDrag = function() {
       xRemoveEventListener(el, Awe.env.eventDragStart, dragStart);
       // Make sure any in-progress drags have their listeners removed
-      dragEnd();
+      dragEnd(null, true);
     }
   }
   
@@ -336,9 +470,6 @@
   Awe.DragFilterLimitAxes = function(minX, maxX, minY, maxY) {
     var _i = this;
     
-    _i.start = function(el, pos) {
-    }
-    
     _i.move = function(el, pos) {
       var x = Awe.clamp(pos.x, minX, maxX);
       var y = Awe.clamp(pos.y, minY, maxY);
@@ -346,40 +477,69 @@
     }
   }
   
+/*
   // To be continued...
-  /*
+  Awe.DragFilterLimitAxesNoSpring = function(minX, maxX, minY, maxY) {
+    var _i = this;
+    
+    _i.move = function(el, pos) {
+      var x = Awe.clamp(pos.x, minX, maxX);
+      var y = Awe.clamp(pos.y, minY, maxY);
+      return { x: x, y: y };
+    }
+  }
+*/
+  
   Awe.DragFilterMomentum = function() {
     var _i = this;
     
     _i.start = function(el, pos) {
+      _i.lastPos = null;
+      _i.vel = { x: 0, y: 0 };
     }
     
     _i.move = function(el, pos) {
-      _i.animating = true;
-      return { x: x, y: y };
+      if (_i.lastPos) {
+        var deltaTime = (Date.now() - _i.lastTime) * 0.001;
+        _i.vel.x = (pos.x - _i.lastPos.x) / deltaTime;
+        _i.vel.y = (pos.y - _i.lastPos.y) / deltaTime;
+      }
+      _i.lastPos = { x: pos.x, y: pos.y };
+      // TODO: Make drag time available to this function
+      _i.lastTime = Date.now();
+
+      return pos;
     }
-    
-    _i.animate = function() {
+
+    _i.animates = true;
+
+    _i.animate = function(animationState) {
       // Apply velocity and acceleration
-      if (vel == 0) {
-        _i.animating = false;
+      animationState.velocity.x *= 0.8;
+      animationState.velocity.y *= 0.8;
+
+      var dx = animationState.velocity.x * animationState.deltaTime;
+      var dy = animationState.velocity.y * animationState.deltaTime;
+      
+      if ((dx * dx + dy * dy) > 1) {
+        animationState.pos.x += dx;
+        animationState.pos.y += dy;
+        
+        return false;
+      }
+      // Done
+      return true;
     }
   }
-  */
   
   Awe.DragUpdaterTopLeft = function() {
     var _i = this;
     
-    _i.start = function(el, pos) {
-    }
-    
-    _i.move = function(el, pos) {
-      var left = pos.x;
-      var top = pos.y;
+    _i.move = function(el, evt) {
+      var left = evt.pos.x;
+      var top = evt.pos.y;
       el.style.left = left + "px";
       el.style.top = top + "px";
-      
-      return pos;
     }
   }
 

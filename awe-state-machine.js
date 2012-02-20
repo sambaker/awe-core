@@ -4,14 +4,19 @@
  * Copyright 2012, Artefact Group LLC
  * Licensed under MIT.
  */
+
 (function(Awe, global, document, undefined) {
 
+  // = Awe.StateMachine =
+  //
+  // A general state machine. More documentation to come...
+  //
   // State contains any of:
-  //  allowOnly - array with 0 or more states (or null)
-  //  doNotAllow - array with 1 or more states (or null)
-  //  start function (or null)
-  //  update function (or null)
-  //  end function (or null)
+  //  {{{allowOnly}}} - array with 0 or more states (or null)
+  //  {{{doNotAllow}}} - array with 1 or more states (or null)
+  //  {{{start}}} function (or null)
+  //  {{{update}}} function (or null)
+  //  {{{end}}} function (or null)
   
   var StateMachine = Awe.StateMachine = function(name, stateMap, initialStateId) {
     var _i = this;
