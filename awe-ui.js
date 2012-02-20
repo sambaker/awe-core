@@ -8,11 +8,7 @@
 
   // Stack of saved document.onmousedown handlers
   var _popupStack = [];
-  
-  var _xa = new xAnimation();
-  
-  var _DIMISS_DURATION = 100; // ms
-  
+    
   /* 
    * purpose: Helper function to ensure that we have an element. Allows called 
    * of ui* functions to pass in either an HTML element object or an id string, 
@@ -73,7 +69,6 @@
   
     _popupStack.push({
       element:element,
-      opacity:element.style.opacity, // remember
       parentPopup:parentPopup,
       dismissedCallback:dismissedCallback,
       previousonmousedownCb:document.onmousedown
@@ -111,16 +106,10 @@
 
     if(!top) throw 'Element not found in the popup stack (Awe.hidePopup)';
     
+    element.style.visibility = "hidden";
     if(top.dismissedCallback) top.dismissedCallback();
     document.onmousedown = top.previousonmousedownCb;
     _popupStack.pop();
-
-    _xa.opacity(element,0,_DIMISS_DURATION,0,0,function() {
-      if(element.style.visibility != "hidden") {
-        element.style.visibility = "hidden";
-        element.style.opacity = top.opacity; // restore
-      }
-    });
 
     return;
   }
