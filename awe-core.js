@@ -570,18 +570,39 @@
             };
   })();
   
-  // Specify a callback
-  Awe.addAnimationCallback = function(callback, interval) {
+  // ** {{{ Awe.addAnimationCallback(callback, [config]) }}} **
+  //
+  // Begins an animation loop, calling the supplied callback each frame until the callback returns true to signify completion or
+  // until {{{Awe.cancelAnimationCallback(handle)}}} is called to cancel the animation. This method will use the browser's
+  // {{{requestAnimationFrame}}} function if possible which is optimized for rendering and animation callbacks and generally runs
+  // at 60fps if practical.
+  //
+  // |=param|=description|
+  // |{{{callback}}}|a function to call on an interval. Its parameters will be {{{callback(deltaTime, totalTime, iteration)}}}|
+  // |{{{config.interval}}}|callback interval in seconds. Don't use this unless you need a specific interval since modern browsers will pick the optimal animation callback interval by default|
+  // |{{{config.onCancel}}}|function to call when this animation is cancelled|
+  // |{{{config.onEnd}}}|function to call when this animation has ended|
+  //
+  // **Returns** a handle that can be passed to {{{Awe.cancelAnimationCallback(handle)}}}
+  Awe.addAnimationCallback = function(callback, config) {
+    var config = config || {};
     var startTime = Date.now();
     var lastTime = startTime;
     var handle = {};
     var cancelled = false;
+    var iteration = 0;
     
-    if (interval === undefined) {
+    if (config.interval === undefined) {
       requestAnimationFrameShim(function wrapper() {
         time = Date.now();
-        if (!cancelled && !callback(time - lastTime, time - startTime)) {
+        if (!cancelled && !callback(time - lastTime, time - startTime, iteration++)) {
           requestAnimationFrameShim(wrapper);
+        } else {
+          if (cancelled) {
+            config.onCancel && config.onCancel();
+          } else {
+            config.onEnd && config.onEnd();
+          }
         }
         lastTime = time;
       })
@@ -591,16 +612,18 @@
     } else {
       var intervalId = setInterval(function () {
         time = Date.now();
-        if (callback(time - lastTime, time - startTime)) {
+        if (callback(time - lastTime, time - startTime, iteration++)) {
+          config.onEnd && config.onEnd();
           if (intervalId) {
             clearInterval(intervalId);
             intervalId = null;
           }
         }
         lastTime = time;
-      }, interval);
+      }, config.interval);
       handle.cancel = function() {
         if (intervalId) {
+          config.onCancel && config.onCancel();
           clearInterval(intervalId);
           intervalId = null;
         }
@@ -610,8 +633,14 @@
     return handle;
   }
   
+  // ** {{{ Awe.cancelAnimationCallback(handle) }}} **
+  //
+  // Cancels an animation requested with {{{Awe.addAnimationCallback}}}.
+  //
+  // |=param|=description|
+  // |{{{handle}}}|an animation handle returned by {{{Awe.addAnimationCallback}}}|
   Awe.cancelAnimationCallback = function(handle) {
-    handle.cancel();
+    handle && handle.cancel();
   }
 
   // Cancels an event to stop propogation. Use this to swallow events in listeners.
