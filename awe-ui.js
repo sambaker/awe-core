@@ -50,6 +50,23 @@
   }
   
   
+  /*
+   * purpose: listen to keypress events and dismiss the top-most popup if the
+   * ESC key is pressed.
+   */
+  var onKeyDown = function(e) {
+    var t = getTopOfPopupStack();
+    if(t) {
+      e = e || window.event;
+      if (e.keyCode == 27)
+      {
+        Awe.hidePopup(t.element, true);
+      }
+    }
+    return;
+  }
+  
+  
   /* 
    * method: Awe.uiPopup
    *
@@ -121,6 +138,8 @@
     return;
   }
   
-  xAddEventListener( document, "mousedown", onMouseDown, false );
+  xAddEventListener( document, "mousedown", onMouseDown, true );
+  xAddEventListener( document, "keydown", onKeyDown, true );
+
     
 })(Awe, this, document)
