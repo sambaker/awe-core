@@ -21,11 +21,18 @@
   var StateMachine = Awe.StateMachine = function(name, stateMap, initialStateId) {
     var _i = this;
     
+    function _sm_trace(str) { console.log("[awe.sm] " + str); }
+    function _sm_trace_na(from,to) { _sm_trace(from + " -> " + to + " not allowed"); }
+    function _sm_trace_e(s) { _sm_trace("enter : " + s); }
+    function _sm_trace_x(s) { _sm_trace("exit  : " + s); }
+        
     StateMachine.stateMachines.push(_i);
   
     _i.name = name;
     _i.states = stateMap || [];
     _i.currentStateId = null;
+    
+    _i.tracing = false;
       
     _i.addState = function(id, state) {
       if (_i.states[id]) {
@@ -66,24 +73,27 @@
     // Request a change to the supplied state. If a current state exists that will be checked for any conditions that
     // disallow transition to the new state.
     _i.requestState = function(id) {
+    
+      if(!id) throw 'Cannot request a null state';
       
-      var nextState = id && _i.states[id];
+      var nextState = _i.states[id];
       
-      if (id && !nextState) {
-        return false;
-      }
+      if (!nextState) throw 'Specified state does not exist';
       
       if (_i.currentStateId) {
         var currentState = _i.states[_i.currentStateId];
         
         if (!_i.currentStateDone && currentState.allowOnly && currentState.allowOnly.indexOf(id) < 0) {
+          if(_i.tracing) _sm_trace_na(_i.currentStateId, id);
           return false;
         }
         if (!_i.currentStateDone && currentState.doNotAllow && currentState.doNotAllow.indexOf(id) >= 0) {
+          if(_i.tracing) _sm_trace_na(_i.currentStateId, id)
           return false;
         }
         
         if (currentState.end) {
+          if(_i.tracing) _sm_trace_x(_i.currentStateId);
           currentState.end.call(currentState, id);
         }
       }
@@ -92,6 +102,7 @@
         nextState._startTime = Date.now();
         nextState.runTime = 0;
         if (nextState.start) {
+          if(_i.tracing) _sm_trace_e(_i.currentStateId);
           nextState.start.apply(nextState, [_i.currentState && _i.currentState.id].concat(Array.prototype.slice.call(arguments,1)));
         }
       }
