@@ -6,7 +6,7 @@
  */
 (function(Awe, global, document, undefined) {
 
-  // Stack of saved document.onmousedown handlers
+  // Stack of popups and their associated state
   var _popupStack = [];
     
   /* 
@@ -30,6 +30,45 @@
    */
   var getTopOfPopupStack = function() {
     return (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
+  }
+  
+  
+  /*
+   * purpose: listens to mousedown events in the document and handles the 
+   * dismissing of popups. If the mousedown even occured inside the bounds of 
+   * an open popup, all popups up to, but not including it are dismissed.
+   * If the mousedown was outside the bounds of all popups, the entire popup
+   * stack will be dismissed.
+   */
+  var onMouseDown = function(e) {
+    var t = getTopOfPopupStack();
+    while(t) {
+      e = e || window.event;
+      if (!xHasPoint(t.element, e.pageX, e.pageY)) {
+        Awe.hidePopup(t.element, true);
+        t = getTopOfPopupStack();
+      } else {
+        break;
+      }
+    }
+    return;
+  }
+  
+  
+  /*
+   * purpose: listen to keypress events and dismiss the top-most popup if the
+   * ESC key is pressed.
+   */
+  var onKeyDown = function(e) {
+    var t = getTopOfPopupStack();
+    if(t) {
+      e = e || window.event;
+      if (e.keyCode == 27)
+      {
+        Awe.hidePopup(t.element, true);
+      }
+    }
+    return;
   }
   
   
@@ -60,7 +99,6 @@
     while(top && top.element != parentPopup) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onmousedown = top.previousonmousedownCb;
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
@@ -73,14 +111,7 @@
       dismissedCallback:dismissedCallback,
       previousonmousedownCb:document.onmousedown
     });
-  
-    document.onmousedown = (function(e) {
-      e = e || window.event;
-      if (!xHasPoint(element, e.pageX, e.pageY)) {
-        Awe.hidePopup(element, true);
-      }
-      return;
-    });
+
   }
   
   /* 
@@ -99,7 +130,6 @@
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onmousedown = top.previousonmousedownCb;
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
@@ -108,10 +138,13 @@
     
     element.style.visibility = "hidden";
     if(top.dismissedCallback) top.dismissedCallback();
-    document.onmousedown = top.previousonmousedownCb;
     _popupStack.pop();
 
     return;
   }
+  
+  xAddEventListener( document, "mousedown", onMouseDown, true );
+  xAddEventListener( document, "keydown", onKeyDown, true );
+
     
 })(Awe, this, document)
