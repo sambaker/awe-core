@@ -6,7 +6,7 @@
  */
 (function(Awe, global, document, undefined) {
 
-  // Stack of saved document.onmousedown handlers
+  // Stack of popups and their associated state
   var _popupStack = [];
     
   /* 
@@ -30,6 +30,23 @@
    */
   var getTopOfPopupStack = function() {
     return (_popupStack.length > 0) ? _popupStack[_popupStack.length-1] : null;
+  }
+  
+  
+  /*
+   * purpose: listens to mousedown events in the document and handles the 
+   * dismissing of popups. Curent implemenation dismisses the top-most popup
+   * if the mousedown occured outside its boundary.
+   */
+  var onMouseDown = function(e) {
+    var t = getTopOfPopupStack();
+    if(t) {
+      e = e || window.event;
+      if (!xHasPoint(t.element, e.pageX, e.pageY)) {
+        Awe.hidePopup(t.element, true);
+      }
+    }
+    return;
   }
   
   
@@ -60,7 +77,6 @@
     while(top && top.element != parentPopup) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onmousedown = top.previousonmousedownCb;
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
@@ -73,14 +89,7 @@
       dismissedCallback:dismissedCallback,
       previousonmousedownCb:document.onmousedown
     });
-  
-    document.onmousedown = (function(e) {
-      e = e || window.event;
-      if (!xHasPoint(element, e.pageX, e.pageY)) {
-        Awe.hidePopup(element, true);
-      }
-      return;
-    });
+
   }
   
   /* 
@@ -99,7 +108,6 @@
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
       if(top.dismissedCallback) top.dismissedCallback();
-      document.onmousedown = top.previousonmousedownCb;
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
@@ -108,10 +116,11 @@
     
     element.style.visibility = "hidden";
     if(top.dismissedCallback) top.dismissedCallback();
-    document.onmousedown = top.previousonmousedownCb;
     _popupStack.pop();
 
     return;
   }
+  
+  xAddEventListener( document, "mousedown", onMouseDown, false );
     
 })(Awe, this, document)
