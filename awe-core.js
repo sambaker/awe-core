@@ -7,7 +7,7 @@
 (function(global, document, namespace, undefined) {
   namespace = namespace || "Awe";
 
-  // = Awe =
+  // = awe-core =
   //
   // This is a library of all-purpose, general utility functions contained within
   // the {{{Awe}}} namespace.
@@ -19,24 +19,24 @@
   
   // ** {{{ Awe.isArray(o) }}} **
   //
-  // Determines whether an object is an array but not a string
+  // Tests whether object {{{o}}} is an array
   //
-  // {{{o}}} is an object to test
-  //
-  // Returns {{{true}}} if the object is an array (but not a string) and {{{false}}} otherwise
-  
+  // |=param|=description|
+  // |{{{o}}}|The object to test|
+  // 
+  // **{{{returns}}}** {{{true}}} if {{{o}}} is an array, otherwise {{{false}}}
   Awe.isArray = function(o) {
     return o && o.constructor == Array.prototype.constructor;
   }
 
   // ** {{{ Awe.isArrayOrString(o) }}} **
   //
-  // Determines whether an object is an array or a string
+  // Tests whether object {{{o}}} is either an array or a string
   //
-  // {{{o}}} is an object to test
-  //
-  // Returns {{{true}}} if the object is an array or a string and {{{false}}} otherwise
-
+  // |=param|=description|
+  // |{{{o}}}|The object to test|
+  // 
+  // **{{{returns}}}** {{{true}}} if {{{o}}} is an array or string, otherwise {{{false}}}
   Awe.isArrayOrString = function(o) {
     return o && (o.constructor == Array.prototype.constructor ||
       o.constructor == String.prototype.constructor);
@@ -44,22 +44,40 @@
 
   // ** {{{ Awe.isType(o, type) }}} **
   //
-  // Determines whether an object is a given type
+  // Tests whether object {{{o}}} is a of type {{{type}}}
   //
-  // {{{o}}} is an object to test
-  // {{{type}}} is the constructor of the type to test
-  //
-  // Returns {{{true}}} if the object {{{o}}} is of type {{{type}}}
-
+  // |=param|=description|
+  // |{{{o}}}|The object to test|
+  // |{{{type}}}|The type to compare|
+  // 
+  // **{{{returns}}}** {{{true}}} if {{{o}}} is of type {{{type}}}, otherwise {{{false}}}
   Awe.isType = function(o, type) {
     return o && o.constructor == type.prototype.constructor;
   }
   
+  // ** {{{ Awe.isFunction(o) }}} **
+  //
+  // Tests whether object {{{o}}} is a function
+  //
+  // |=param|=description|
+  // |{{{o}}}|The object to test|
+  // 
+  // **{{{returns}}}** {{{true}}} if {{{o}}} is a function, otherwise {{{false}}}
   Awe.isFunction = function(o) {
     return o && o.constructor == Function.prototype.constructor;
   }
 
-  // Environment-specific vars
+  // ** {{{ Awe.env }}} **
+  //
+  // An object describing the current environment
+  //
+  // |=field|=description|
+  // |{{{inputTouch}}}|{{{true}}} if the current environment is a touch input device|
+  // |{{{inputMouse}}}|{{{true}}} if the current environment is a mouse input device, opposite of {{{inputTouch}}}|  
+  // |eventDragStart|The event name for drag start events on this platform, for example mousedown or touchstart|
+  // |eventDragMove|The event name for drag move events on this platform|
+  // |eventDragEnd|The event name for drag move events on this platform|
+  // |eventClick|The event name for click events on this platform|
   Awe.env = {};
   Awe.env.inputTouch = "ontouchstart" in global;
   Awe.env.inputMouse = !Awe.env.inputTouch;
@@ -69,7 +87,16 @@
   Awe.env.eventDragEnd = Awe.env.inputTouch ? "touchend" : "mouseup";
   Awe.env.eventClick = Awe.env.inputTouch ? "touchend" : "click";
   
-  // Clamp a number between min/max
+  // ** {{{ Awe.clamp(n, range1, range2 }}} **
+  //
+  // Clamps {{{n}}} between {{{range1}}} and {{{range2}}}
+  //
+  // |=param|=description|
+  // |{{{n}}}|The number to be clamped|
+  // |{{{range1}}}|An upper or lower limit to clamp to|
+  // |{{{range2}}}|The other upper or lower limit to clamp to|
+  // 
+  // **{{{returns}}}** the clamped number
   Awe.clamp = function(n, range1, range2) {
     if (range2 < range1) {
       var t = range1;
@@ -80,6 +107,14 @@
   }
 
   // Return -1 if n < 0 or 1 otherwise
+  // ** {{{ Awe.sign(n) }}} **
+  //
+  // Returns the positive/negative direction of n
+  //
+  // |=param|=description|
+  // |{{{n}}}|The number to return the sign of|
+  // 
+  // **{{{returns}}}** -1 if {{{n}}} < 0, otherwise, 1
   Awe.sign = function(n) {
     return (n < 0) ? -1 : 1;
   }
@@ -549,12 +584,14 @@
     }
   }
 
-  /*
-   * method: Awe.objectToString
-   * 
-   * purpose: convert an arbitrary object to string representation for logging
-   *
-   */
+  // ** {{{ Awe.objectToString(o) }}} **
+  //
+  // Convert an object to its string representation
+  //
+  // |=param|=description|
+  // |{{{o}}}|object to turn to string|
+  // 
+  // **{{{returns}}}** a string representation suitable for console logging
   Awe.objectToString = function(o) {
     // Do something more interesting in the future?
     return JSON.stringify(o);

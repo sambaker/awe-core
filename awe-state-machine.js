@@ -22,9 +22,11 @@
     var _i = this;
     
     function _sm_trace(str) { console.log("[awe.sm] " + str); }
-    function _sm_trace_na(from,to) { _sm_trace(from + " -> " + to + " not allowed"); }
-    function _sm_trace_e(s) { _sm_trace("enter : " + s); }
-    function _sm_trace_x(s) { _sm_trace("exit  : " + s); }
+    function _sm_trace_na(from,to)    { _sm_trace(from + " -> " + to + " not allowed"); }
+    function _sm_trace_e(s)           { _sm_trace("enter      : " + s); }
+    function _sm_trace_x(s)           { _sm_trace("exit       : " + s); }
+    function _sm_trace_restart(s)     { _sm_trace("restart    : " + s); }
+    function _sm_trace_transition(s)  { _sm_trace("transition : " + s); }
         
     StateMachine.stateMachines.push(_i);
   
@@ -52,6 +54,8 @@
     // once the transition is complete.
     _i.requestTransitionState = function(id) {
       
+      if(_i.tracing) _sm_trace_transition(id);
+      
       if (typeof(arguments[arguments.length - 1]) != "function") {
         throw "Last argument of StateMachine.requestTransitionState must be an on-complete callback"
       }
@@ -70,11 +74,27 @@
       return false;
     }
     
+    // ** {{{ restartCurrentState() }}} **
+    //
+    // Restarts the current state, causing its end and start functions to be called. Note that {{{requestState}}}
+    // will never restart the current state, it will just leave a matching state running which makes this call
+    // necessary to force a restart.
+    //
+    // **{{{returns}}}** {{{true}}} if the transition completed, {{{false}}} if the transition was disallowed.
+    _i.restartCurrentState = function() {
+      if(_i.tracing) _sm_trace_restart(_i.currentStateId);
+      var rcs = _i.restartingCurrentState;
+      _i.restartingCurrentState = true;
+      var success = _i.requestState(_i.currentStateId);
+      _i.restartingCurrentState = rcs;
+      return success;
+    }
+    
     // Request a change to the supplied state. If a current state exists that will be checked for any conditions that
     // disallow transition to the new state.
     _i.requestState = function(id) {
     
-      if(!id) throw 'Cannot request a null state';
+      if (!id) throw 'Cannot request a null state';
       
       var nextState = _i.states[id];
       
@@ -82,7 +102,7 @@
       
       if (_i.currentStateId) {
       
-        if(_i.currentStateId == id) {
+        if(_i.currentStateId == id && !_i.restartingCurrentState) {
           if(_i.tracing) _sm_trace_e(id + " (no change)");
           return true;
         }
