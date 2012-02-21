@@ -464,10 +464,11 @@
     }
   }
   
-  Awe.DragAnchorTopLeft = function() {
+  Awe.DragAnchorTopLeft = function(anchorEl) {
     var _i = this;
     
     _i.getAnchor = function(el, pos) {
+      el = anchorEl || el;
       return { x: xLeft(el) - pos.x, y: xTop(el) - pos.y }
     }
   }
