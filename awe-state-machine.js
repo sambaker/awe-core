@@ -81,6 +81,12 @@
       if (!nextState) throw 'Specified state does not exist';
       
       if (_i.currentStateId) {
+      
+        if(_i.currentStateId == id) {
+          if(_i.tracing) _sm_trace_e(id + " (no change)");
+          return true;
+        }
+        
         var currentState = _i.states[_i.currentStateId];
         
         if (!_i.currentStateDone && currentState.allowOnly && currentState.allowOnly.indexOf(id) < 0) {
