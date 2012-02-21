@@ -92,8 +92,8 @@
           return false;
         }
         
+        if(_i.tracing) _sm_trace_x(_i.currentStateId);
         if (currentState.end) {
-          if(_i.tracing) _sm_trace_x(_i.currentStateId);
           currentState.end.call(currentState, id);
         }
       }
@@ -101,8 +101,8 @@
       if (nextState) {
         nextState._startTime = Date.now();
         nextState.runTime = 0;
+        if(_i.tracing) _sm_trace_e(id);
         if (nextState.start) {
-          if(_i.tracing) _sm_trace_e(_i.currentStateId);
           nextState.start.apply(nextState, [_i.currentState && _i.currentState.id].concat(Array.prototype.slice.call(arguments,1)));
         }
       }
