@@ -38,6 +38,12 @@ When adding Javascript files to the library, add those filenames to doc/index.ht
 
 Load doc/index.html into a browser to test the formatting of the docs.
 
+To automatically publish changes to http://sambaker.github.com/awe-core/doc/ when commiting the master branch, run the following command from the awe-core folder:
+
+git config --add remote.origin.push +refs/heads/master:refs/heads/gh-pages
+
+Then when you do a git push, the repo will be pushed to the gh-pages branch that github uses to serve http://sambaker.github.com/awe-core
+
 Preliminary documentation
 -------------------------
 
