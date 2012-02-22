@@ -56,12 +56,31 @@
       
       if(_i.tracing) _sm_trace_transition(id);
       
-      if (typeof(arguments[arguments.length - 1]) != "function") {
-        throw "Last argument of StateMachine.requestTransitionState must be an on-complete callback"
+      var lastArg = arguments[arguments.length - 1];
+      var onDone;
+      if (Awe.isType(lastArg, String)) {
+        onDone = function() {
+          _i.requestState(lastArg);
+        }
+      } else if (Awe.isType(lastArg, Array) && lastArg.length > 0) {
+        onDone = function() {
+          var state = lastArg.shift();
+          if (lastArg.length > 0) {
+            _i.requestTransitionState(state, lastArg);
+          } else {
+            _i.requestState(state);
+          }
+        }
+      } else if (Awe.isType(lastArg, Function)) {
+        onDone = lastArg;
+      }
+      
+      if (!onDone) {
+        throw "Last argument of StateMachine.requestTransitionState must be an on-complete callback, a state id string or an array of state ids";
       }
       
       if (_i.requestState.apply(_i, arguments)) {
-        _i.transitionCompleteCallback = arguments[arguments.length - 1];
+        _i.transitionCompleteCallback = onDone;
   
         if (!_i.states[_i.currentStateId].update) {
           throw "ERROR: Transition states must have an update method, otherwise they will never be able to complete.";
