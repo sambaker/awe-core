@@ -41,6 +41,10 @@
    * stack will be dismissed.
    */
   var onMouseDown = function(e) {
+    // TEMP: Workaround for failing hit test in apps
+    if (Awe.clickDoesNotHidePopup) {
+      return;
+    }
     var t = getTopOfPopupStack();
     while(t) {
       e = e || window.event;
