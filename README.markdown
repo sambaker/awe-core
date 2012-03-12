@@ -18,6 +18,8 @@ We will not be supporting all browsers. The expected supported browser set is:
 
 There are no external dependencies besides having a sufficiently compliant browser.
 
+Documentation is published here http://sambaker.github.com/awe-core/doc/
+
 Installing
 ----------
 
@@ -38,40 +40,9 @@ When adding Javascript files to the library, add those filenames to doc/index.ht
 
 Load doc/index.html into a browser to test the formatting of the docs.
 
-Preliminary documentation
--------------------------
+To automatically publish changes to http://sambaker.github.com/awe-core/doc/ when commiting the master branch, run the following command from the awe-core folder:
 
-    // Helper functions
-    Awe.isArray(object)
-    Awe.isArrayOrString(object)
-    Awe.isFunction(object)
-    Awe.isType(object, type)
-    Awe.getQueryParam(name, [url = window.location.href])
-    Awe.forEach(array, callback, [thisArg = window])
-    Awe.cancelEvent(event)
-    Awe.objectToString(obj) - convert an object into a readable string for logging
-    
-    Awe.getGuid() - gets a session-unique string identifier
-    Awe.getGuidNumeric() - gets a session-unique numeric identifier > 0
-    
-    // Math
-    Awe.clamp(num, min, max)
-    Awe.acosSafe(num) - doesn't throw an exception if num is out of the range -1 to 1 but clamps num to that range instead
-    
-    // Environment helpers (sample contents)
-    Awe.env = {
-    	inputTouch: true,
-    	inputMouse: false,
-    	eventDragStart: "touchstart",
-    	eventDragMove: "touchmove",
-    	eventDragEnd: "touchend",
-    	eventClick: "touchend"
-    }
-    
-    // DOM helpers
-    Awe.createElement(type, parent, config)
-    Awe.enableDrag(element, config)
-    Awe.disableDrag(element)
-    
-    // Classes
-    Awe.Color � example, color = Awe.Color("#f8f8f8")
+git config --add remote.origin.push +refs/heads/master:refs/heads/gh-pages
+
+Then when you do a git push, the repo will be pushed to the gh-pages branch that github uses to serve http://sambaker.github.com/awe-core
+

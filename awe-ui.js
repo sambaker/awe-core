@@ -41,11 +41,15 @@
    * stack will be dismissed.
    */
   var onMouseDown = function(e) {
+    // TEMP: Workaround for failing hit test in apps
+    if (Awe.clickDoesNotHidePopup) {
+      return;
+    }
     var t = getTopOfPopupStack();
     while(t) {
       e = e || window.event;
       if (!xHasPoint(t.element, e.pageX, e.pageY)) {
-        Awe.hidePopup(t.element, true);
+        Awe.hidePopup(t.element, true, e);
         t = getTopOfPopupStack();
       } else {
         break;
@@ -65,7 +69,7 @@
       e = e || window.event;
       if (e.keyCode == 27)
       {
-        Awe.hidePopup(t.element, true);
+        Awe.hidePopup(t.element, true, e);
       }
     }
     return;
@@ -121,7 +125,7 @@
    * in the current stack starting from the top upto and including the element. 
    * If element is not in the stack, has the side-effect of dimissing all popups.
    */
-  Awe.hidePopup = function(element, dismissing) {
+  Awe.hidePopup = function(element, dismissing, event) {
     
     element = ensureElement(element);
     
@@ -129,7 +133,7 @@
     
     while(top && top.element != element) {
       top.element.style.visibility = "hidden";
-      if(top.dismissedCallback) top.dismissedCallback();
+      if(top.dismissedCallback) top.dismissedCallback(event);
       _popupStack.pop();
       top = getTopOfPopupStack();
     }
@@ -137,7 +141,7 @@
     if(!top) throw 'Element not found in the popup stack (Awe.hidePopup)';
     
     element.style.visibility = "hidden";
-    if(top.dismissedCallback) top.dismissedCallback();
+    if(top.dismissedCallback) top.dismissedCallback(event);
     _popupStack.pop();
 
     return;
