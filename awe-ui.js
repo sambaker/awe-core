@@ -147,4 +147,4 @@
   xAddEventListener( document, "keydown", onKeyDown, true );
 
     
-})(Awe, this, document)
+})(Awe, this, document);

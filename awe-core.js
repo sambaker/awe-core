@@ -756,4 +756,4 @@
 
   global[overrideNamespace || namespace] = Awe;
 
-})(this, document)
+})(this, document);

@@ -147,4 +147,4 @@
       StateMachine.stateMachines[i].update();
     }
   }
-})(Awe, this, document)
+})(Awe, this, document);
