@@ -99,7 +99,7 @@
    */
   Awe.reportUnhandledErrors = function(mailto, subject) {
     _mailto = mailto;
-    _subject = subject || "[js-error-report] ";
+    _subject = subject || "[js-error-report]";
     window.onerror = handleError;
   }
   
