@@ -8,6 +8,7 @@
     
   var _mailto;
   var _subject;
+  var _additionalOnErrorCallback;
   var _ui;
   
   /* 
@@ -90,6 +91,9 @@
    */
   var handleError = function(message, url, linenumber) {
     showOnErrorPrompt(getMailtoHref(message, "Error: " + message + ", on line " + linenumber + " of " + url));
+    if(_additionalOnErrorCallback) {
+      _additionalOnErrorCallback(message, url, linenumber);
+    }
   }
   
   /* 
@@ -98,9 +102,10 @@
    * Attach a handler for the window.onerror event to cllect data about unhandled
    * script errors.
    */
-  Awe.reportUnhandledErrors = function(mailto, subject) {
+  Awe.reportUnhandledErrors = function(mailto, subject, additionalOnErrorCallback) {
     _mailto = mailto;
     _subject = subject || "[js-error-report]";
+    _additionalOnErrorCallback = additionalOnErrorCallback;
     window.onerror = handleError;
   }
   
