@@ -68,7 +68,7 @@
     _ui.appendChild(br2);
     
     var closeThis = document.createElement("A");
-    closeThis.href = "http://google.com";
+    closeThis.href = "/";
     closeThis.innerHTML = "Close this error message";
     
     xAddEventListener( closeThis, "click", hideOnErrorPrompt, true );
@@ -82,6 +82,7 @@
   var hideOnErrorPrompt = function(evt) {
     Awe.cancelEvent(evt);
     document.body.removeChild(_ui);
+    return false;
   }
   
   /* 
