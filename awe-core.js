@@ -166,6 +166,9 @@
     var k;
     var el = document.createElement(type);
     config = config || {};
+    if(config.id) {
+      el.id = config.id;
+    }
     if (config.backgroundSprite) {
       // TODO:
       throw("TODO:");
