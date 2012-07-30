@@ -194,6 +194,15 @@
     return el;
   }
 
+  /* Apply the given style attributes to an HTML element. Existing styles are 
+   * updated only if different from the given values and attributes not present 
+   * in styles are left unmodified.
+   */
+  Awe.applyStyles = function(el, styles) {
+    for (k in (styles || {})) {
+      (el.style[k] == styles[k]) || (el.style[k] = styles[k]);
+    }    
+  } 
   
   /*
    * method: Awe.enableDrag
