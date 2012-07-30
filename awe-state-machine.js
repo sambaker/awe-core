@@ -104,9 +104,17 @@
       if(_i.tracing) _sm_trace_restart(_i.currentStateId);
       var rcs = _i.restartingCurrentState;
       _i.restartingCurrentState = true;
-      var success = _i.requestState(_i.currentStateId);
+      var success = _i.requestState.apply(_i, [_i.currentStateId].concat(Array.prototype.slice.call(arguments,0)));
       _i.restartingCurrentState = rcs;
       return success;
+    }
+
+    _i.requestOrRestartState = function(state) {
+      if (state == _i.currentStateId) {
+        return _i.restartCurrentState.apply(_i, Array.prototype.slice.call(arguments,1));
+      } else {
+        return _i.requestState.apply(_i, arguments);
+      }
     }
     
     // Request a change to the supplied state. If a current state exists that will be checked for any conditions that
@@ -148,7 +156,7 @@
         nextState.runTime = 0;
         if(_i.tracing) _sm_trace_e(id);
         if (nextState.start) {
-          nextState.start.apply(nextState, [_i.currentState && _i.currentState.id].concat(Array.prototype.slice.call(arguments,1)));
+          nextState.start.apply(nextState, [_i.currentStateId].concat(Array.prototype.slice.call(arguments,1)));
         }
       }
       
