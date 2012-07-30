@@ -5,7 +5,7 @@
  * Licensed under MIT.
  */
 
-(function(Awe, global, document, undefined) {
+(function(Awe, global, undefined) {
 
   // = Awe.StateMachine =
   //
@@ -194,4 +194,4 @@
       StateMachine.stateMachines[i].update();
     }
   }
-})(Awe, this, document);
+})(typeof exports === 'undefined' ? Awe : exports, this);
