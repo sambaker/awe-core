@@ -5,20 +5,23 @@
  * Licensed under MIT.
  */
 
+/**
+ * Awe namespace
+ */
 (function(Awe, global, document, undefined) {
   
-  /*
-   * method: Awe.enableDrag
-   * 
-   * purpose: enable drag on a DOM element
-   *
-   */  
+  /**
+   * Enables drag on an HTML element
+   * @param  {Object} el     The element that's draggable
+   * @param  {Object} config config options
+   */
   Awe.enableDrag = function(el, config) {
   
     config = config || {};
     var filters = config.filters;
     var updater = config.updater;
     var hasAnimatingFilter = false;
+    var cancelEvents = config.cancelEvents === undefined ? true : config.cancelEvents;
     
     // Convert a single drag filter
     if (filters) {
@@ -75,7 +78,7 @@
       }
     }
     
-    function processDrag(clientPos, pos, start) {
+    function processDrag(clientPos, pos, evt) {
       if (touch.now) {
         touch.maxDistanceSquared = Math.max(touch.maxDistanceSquared, (touch.now.x - touch.start.x) * (touch.now.x - touch.start.x) + (touch.now.y - touch.start.y) * (touch.now.y - touch.start.y));
       } else {
@@ -88,7 +91,8 @@
         pos: { x: pos.x, y: pos.y },
         dragTime: (Date.now() - touch.startTime) * 0.001,
         maxDistanceSquared: touch.maxDistanceSquared,
-        velocity: { x: 0, y: 0 }
+        velocity: { x: 0, y: 0 },
+        event: evt
       }
       if (touch.lastDrag) {
         newDrag.clientDelta = {
@@ -198,10 +202,10 @@
     }
       
     function dragMove(evt) {
-      Awe.cancelEvent(evt);
+      cancelEvents && Awe.cancelEvent(evt);
       touch.now = getClientPos(evt);
       var pos = applyFilters(touch.now);
-      var drag = processDrag(touch.now, pos);
+      var drag = processDrag(touch.now, pos, evt);
       if (updater && updater.move) {
         updater.move(el, drag);
       }
@@ -215,7 +219,7 @@
         return;
       }
       touch.dragging = false;
-      evt && Awe.cancelEvent(evt);
+      cancelEvents && evt && Awe.cancelEvent(evt);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
@@ -231,7 +235,7 @@
       // animating filter
       if (config.onDragEnd && evt) {
         var pos = getClientPos(evt);
-        config.onDragEnd(processDrag(pos, pos));
+        config.onDragEnd(processDrag(pos, pos, evt));
       }
       if (touch.updateIntervalId && !hasAnimatingFilter) {
         clearInterval(touch.updateIntervalId);
@@ -247,7 +251,7 @@
     }
     
     function dragStart(evt) {
-      Awe.cancelEvent(evt);
+      cancelEvents && Awe.cancelEvent(evt);
       
       // Cancel any existing animation
       endAnimation();
@@ -276,7 +280,7 @@
 
       var pos = applyFilters(touch.now);
       
-      var drag = processDrag(touch.now, pos);
+      var drag = processDrag(touch.now, pos, evt);
 
       if (updater.start) {
         updater.start(el, drag);
@@ -302,6 +306,25 @@
     }
   }
   
+  // Awe.left = function(el, value) {
+  //   if (el.style && el.style.left !== undefined) {
+  //     if (value === undefined) {
+  //       value = parseInt(el.style.left)
+  //       if (isNaN(value)) value = xGetComputedStyle(el, "left", 1);
+  //       if (isNaN(value)) value = 0;
+  //     } else {
+  //       el.style.left = value + "px";
+  //     }
+  //   } else if (el.style && el.style.pixelLeft !== undefined) {
+  //     if (value === undefined) {
+  //       value = el.style.pixelLeft;
+  //     } else {
+  //       el.style.pixelLeft = value;
+  //     }
+  //   }
+  //   return value;
+  // }
+
   /*
    * method: Awe.disableDrag
    * 

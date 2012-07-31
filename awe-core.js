@@ -5,76 +5,87 @@
  * Licensed under MIT.
  */
 (function(global, undefined) {
-  // = awe-core =
-  //
   // This is a library of all-purpose, general utility functions contained within
-  // the {{{Awe}}} namespace.
+  // the `Awe` namespace.
 
   // Create Awe
   var Awe = {}
-
-  // == Helpers ==
   
-  // ** {{{ Awe.isArray(o) }}} **
+  // Awe.isArray(o)
+  // --------------
   //
-  // Tests whether object {{{o}}} is an array
+  // Tests whether object `o` is an array
   //
-  // |=param|=description|
-  // |{{{o}}}|The object to test|
+  // ### params
+  // `o` - the object to test
   // 
-  // **{{{returns}}}** {{{true}}} if {{{o}}} is an array, otherwise {{{false}}}
+  // ### returns
+  // `true` if `o` is an array, otherwise `false`
   Awe.isArray = function(o) {
     return o && o.constructor == Array.prototype.constructor;
   }
 
-  // ** {{{ Awe.isArrayOrString(o) }}} **
+  // Awe.isArrayOrString(o)
+  // ----------------------
   //
-  // Tests whether object {{{o}}} is either an array or a string
+  // Tests whether object `o` is either an array or a string
   //
-  // |=param|=description|
-  // |{{{o}}}|The object to test|
+  // ### params
+  // `o` - the object to test
   // 
-  // **{{{returns}}}** {{{true}}} if {{{o}}} is an array or string, otherwise {{{false}}}
+  // ### returns
+  // `true` if `o` is an array or string, otherwise `false`
   Awe.isArrayOrString = function(o) {
     return o && (o.constructor == Array.prototype.constructor ||
       o.constructor == String.prototype.constructor);
   }
 
-  // ** {{{ Awe.isType(o, type) }}} **
+  // Awe.isType(o, type)
+  // -------------------
   //
-  // Tests whether object {{{o}}} is a of type {{{type}}}
+  // Tests whether object `o` is of type `type`
   //
-  // |=param|=description|
-  // |{{{o}}}|The object to test|
-  // |{{{type}}}|The type to compare|
+  // ### params
+  // `o` - the object to test
+  // `type` - the type to compare against
   // 
-  // **{{{returns}}}** {{{true}}} if {{{o}}} is of type {{{type}}}, otherwise {{{false}}}
+  // ### returns
+  // `true` if `o` is of type `type`, otherwise `false`
+  // 
+  // ### example usage
+  // `Awe.isType([], Array)         // true`
+  // 
+  // `Awe.isType(new Date(), Date)  // true`
   Awe.isType = function(o, type) {
     return o && o.constructor == type.prototype.constructor;
   }
   
-  // ** {{{ Awe.isFunction(o) }}} **
+  // Awe.isFunction(o)
+  // -----------------
   //
-  // Tests whether object {{{o}}} is a function
+  // Tests whether object `o` is a function
   //
-  // |=param|=description|
-  // |{{{o}}}|The object to test|
+  // ### params
+  // `o` - the object to test
   // 
-  // **{{{returns}}}** {{{true}}} if {{{o}}} is a function, otherwise {{{false}}}
+  // ### returns
+  // `true` if `o` is a function, otherwise `false`
   Awe.isFunction = function(o) {
     return o && o.constructor == Function.prototype.constructor;
   }
 
-  // ** {{{ Awe.clamp(n, range1, range2 }}} **
+  // Awe.clamp(n, range1, range2)
+  // ----------------------------
   //
-  // Clamps {{{n}}} between {{{range1}}} and {{{range2}}}
+  // Clamps `n` between `range1` and `range2`
   //
-  // |=param|=description|
-  // |{{{n}}}|The number to be clamped|
-  // |{{{range1}}}|An upper or lower limit to clamp to|
-  // |{{{range2}}}|The other upper or lower limit to clamp to|
+  // ### params
+  // `n` - The number to be clamped
+  // `range1` - An upper or lower limit to clamp to
+  // `range2` - An upper or lower limit to clamp to
   // 
-  // **{{{returns}}}** the clamped number
+  // ### returns
+  // The clamped value
   Awe.clamp = function(n, range1, range2) {
     if (range2 < range1) {
       var t = range1;
@@ -84,32 +95,52 @@
     return Math.min(Math.max(n, range1), range2);
   }
 
-  // Return -1 if n < 0 or 1 otherwise
-  // ** {{{ Awe.sign(n) }}} **
+  // Awe.sign(n)
+  // ----------------------------
   //
   // Returns the positive/negative direction of n
   //
-  // |=param|=description|
-  // |{{{n}}}|The number to return the sign of|
+  // ### params
+  // `n` - The number to return the sign of
   // 
-  // **{{{returns}}}** -1 if {{{n}}} < 0, otherwise, 1
+  // ### returns
+  // -1 if `n` < 0, otherwise, 1
   Awe.sign = function(n) {
     return (n < 0) ? -1 : 1;
   }
   
+  // Awe.positiveOrZero(n)
+  // ----------------------------
+  //
   // Ensure n is a positive value or zero.
+  //
+  // ### params
+  // `n` - The number to evaluate
+  // 
+  // ### returns
+  // The value of n clamped to `(n >= 0)`
   Awe.positiveOrZero = function(n) {
     return (n > 0) ? n : 0;
   }
 
-  // Clamp a number between -1 and 1 before passing to Math.acos to prevent an exception.
+  // Awe.acosSafe(n)
+  // ---------------
+  // 
+  // Clamp n between -1 and 1 before passing to Math.acos to prevent an exception.
   // Ensure that this makes sense for your parameters - it is assumed they will be close to
   // the clamped range but allows computational errors to be safely ignored.
-  Awe.acosSafe = function(rad) {
-    return Math.acos(Awe.clamp(rad, -1, 1));
+  // 
+  // ### params
+  // `n` - The number to evaluate
+  // 
+  // ### returns
+  // The value of `acos(n)` where n is clamped to the valid range of inputs
+  Awe.acosSafe = function(n) {
+    return Math.acos(Awe.clamp(n, -1, 1));
   }
 
-  // Get a query string parameter value by name
+  // Awe.getQueryParam(name, url)
+  // ----------------------------
   Awe.getQueryParam = function(name, url) {
     url = url || global.location.href;
     name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -137,12 +168,12 @@
   }
   
 
-  // ** {{{ Awe.objectToString(o) }}} **
+  // ** ` Awe.objectToString(o) ` **
   //
   // Convert an object to its string representation
   //
   // |=param|=description|
-  // |{{{o}}}|object to turn to string|
+  // |`o`|object to turn to string|
   // 
   // **{{{returns}}}** a string representation suitable for console logging
   // returns null in IE7 which lacks native JSON support
