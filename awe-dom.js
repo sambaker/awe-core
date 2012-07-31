@@ -270,5 +270,33 @@
     return domNode.offsetTop;
   }
   
+  // gets/sets the width of a DOM node
+  Awe.width = function(domNode,w) {
+    if (w) {
+      domNode.floatW = w;
+      domNode.style.width = w + "px";
+      return w;
+    }
+    
+    if (domNode.floatW) {
+      return domNode.floatW;
+    }
+    
+    return domNode.offsetWidth;
+  }
+  
+  // gets/sets the height of a DOM node
+  Awe.height = function(domNode,h) {
+    if (h) {
+      domNode.style.height = h + "px";
+      return h;
+    }
+    
+    if (domNode.floatH) {
+      return domNode.floatH;
+    }
+    
+    return domNode.offsetHeight;
+  }
   
 })(Awe, this, document);
