@@ -1,0 +1,114 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-ue.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-ue.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    
+  <span class="kd">var</span> <span class="nx">_mailto</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">_subject</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">_additionalOnErrorCallback</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">_ui</span><span class="p">;</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: Helper function to create a mailto href with error information.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">getMailtoHref</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">details</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="s2">&quot;%0D%0D%0D%0D&quot;</span><span class="p">;</span>
+    <span class="nx">body</span> <span class="o">+=</span> <span class="s2">&quot;Thank you for reporting this error. Please use the space above to provide additional details about what you were doing when this error occured.&quot;</span><span class="p">;</span>
+    <span class="nx">body</span> <span class="o">+=</span> <span class="s2">&quot;%0D%0DReferring Page: &quot;</span> <span class="o">+</span> <span class="nb">document</span><span class="p">.</span><span class="nx">referrer</span><span class="p">;</span>
+    <span class="nx">body</span> <span class="o">+=</span> <span class="s2">&quot;%0D%0DError Message:%0D-------------------------------------------%0D&quot;</span> <span class="o">+</span> <span class="nx">details</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="s1">&#39;mailto:&#39;</span> <span class="o">+</span> <span class="nx">_mailto</span> <span class="o">+</span> <span class="s1">&#39;?subject=&#39;</span> <span class="o">+</span> <span class="nx">_subject</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s1">&#39;&amp;body=&#39;</span> <span class="o">+</span> <span class="nx">body</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: display a minimal user interface to indicate that an error has </span>
+<span class="cm">   * occured and give the user the option to report it.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">showOnErrorPrompt</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mailtoHref</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_ui</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_ui</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;DIV&quot;</span><span class="p">);</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="s2">&quot;aweOnErrorPrompt&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="s2">&quot;aweOnErrorPrompt&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="s2">&quot;absolute&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="s2">&quot;0px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="s2">&quot;50px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="s2">&quot;400px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">margin</span> <span class="o">=</span> <span class="s2">&quot;0px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">marginTop</span> <span class="o">=</span> <span class="s2">&quot;20px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="s2">&quot;10px&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="s2">&quot;#333&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">zIndex</span> <span class="o">=</span> <span class="s2">&quot;9999&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">lineHeight</span> <span class="o">=</span> <span class="s2">&quot;1.25&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;#f66&quot;</span><span class="p">;</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontFamily</span> <span class="o">=</span> <span class="s2">&quot;Arial,Helvetica&quot;</span><span class="p">;</span>      
+    <span class="p">}</span>
+    
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">_ui</span><span class="p">);</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nx">_ui</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_ui</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">_ui</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+    
+    <span class="kd">var</span> <span class="nx">prompt</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;DIV&quot;</span><span class="p">);</span>
+    <span class="nx">prompt</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Oops! There was an unexpected error on this page.&quot;</span><span class="p">;</span>
+    <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">prompt</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">br1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;BR&quot;</span><span class="p">);</span>
+    <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">br1</span><span class="p">);</span>
+    
+    <span class="kd">var</span> <span class="nx">report</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+    <span class="nx">report</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">mailtoHref</span><span class="p">;</span>
+    <span class="nx">report</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;&lt;strong&gt;Click here to report this error via email. Thanks!&lt;/strong&gt;&quot;</span><span class="p">;</span>    
+    <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">report</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">br2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;BR&quot;</span><span class="p">);</span>
+    <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">br2</span><span class="p">);</span>
+    
+    <span class="kd">var</span> <span class="nx">closeThis</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">);</span>
+    <span class="nx">closeThis</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">;</span>
+    <span class="nx">closeThis</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Close this error message&quot;</span><span class="p">;</span>
+    
+    <span class="nx">xAddEventListener</span><span class="p">(</span> <span class="nx">closeThis</span><span class="p">,</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">hideOnErrorPrompt</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
+    
+    <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">closeThis</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: hide the user interface show after detecting an unhandled error.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">hideOnErrorPrompt</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelEvent</span><span class="p">(</span><span class="nx">evt</span><span class="p">);</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">_ui</span><span class="p">);</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: window.onerror handler.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">handleError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">linenumber</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">showOnErrorPrompt</span><span class="p">(</span><span class="nx">getMailtoHref</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="s2">&quot;, on line &quot;</span> <span class="o">+</span> <span class="nx">linenumber</span> <span class="o">+</span> <span class="s2">&quot; of &quot;</span> <span class="o">+</span> <span class="nx">url</span><span class="p">));</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">_additionalOnErrorCallback</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_additionalOnErrorCallback</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">linenumber</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * method: Awe.reportUnhandledErrors</span>
+<span class="cm">   *</span>
+<span class="cm">   * Attach a handler for the window.onerror event to cllect data about unhandled</span>
+<span class="cm">   * script errors.</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">reportUnhandledErrors</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mailto</span><span class="p">,</span> <span class="nx">subject</span><span class="p">,</span> <span class="nx">additionalOnErrorCallback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">_mailto</span> <span class="o">=</span> <span class="nx">mailto</span><span class="p">;</span>
+    <span class="nx">_subject</span> <span class="o">=</span> <span class="nx">subject</span> <span class="o">||</span> <span class="s2">&quot;[js-error-report]&quot;</span><span class="p">;</span>
+    <span class="nx">_additionalOnErrorCallback</span> <span class="o">=</span> <span class="nx">additionalOnErrorCallback</span><span class="p">;</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="nx">handleError</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+<span class="p">})(</span><span class="nx">Awe</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nb">document</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

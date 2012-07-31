@@ -1,0 +1,57 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-tools.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-tools.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="cm">/*</span>
+<span class="cm">   * method: Schedule a timeout that prints out the mouse coordinates only after </span>
+<span class="cm">   * mousemove has stopped</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">onmousemove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">mousemoveTimer</span><span class="p">);</span>
+    <span class="nx">mousemoveEvent</span> <span class="o">=</span> <span class="nx">evt</span><span class="p">;</span>
+    <span class="nx">mousemoveElementId</span> <span class="o">=</span> <span class="nx">evt</span><span class="p">.</span><span class="nx">currentTarget</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="nx">mousemoveTimer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">onmousestop</span><span class="p">,</span> <span class="mi">250</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="kd">var</span> <span class="nx">onmouseout</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">mousemoveTimer</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">onmousestop</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;point:( &quot;</span> <span class="o">+</span> <span class="nx">mousemoveEvent</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">mousemoveEvent</span><span class="p">.</span><span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot; ) of &quot;</span> <span class="o">+</span> <span class="nx">mousemoveElementId</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">mousemoveEvent</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">mousemoveElementId</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">mousemoveTimer</span><span class="p">;</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * method: Awe.enableCTrace</span>
+<span class="cm">   *</span>
+<span class="cm">   * Attach a mousemove handler to the element with the given ID and trace x,y</span>
+<span class="cm">   * coordinates for that element when the mouse is being moved.</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">enableCTrace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">elementId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">elementId</span><span class="p">);</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;mousemove&quot;</span><span class="p">,</span> <span class="nx">onmousemove</span><span class="p">);</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;mouseout&quot;</span><span class="p">,</span> <span class="nx">onmouseout</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="cm">/* </span>
+<span class="cm">   * method: Awe.disableCTrace</span>
+<span class="cm">   *</span>
+<span class="cm">   * Reverts the effect of enableCTrace.</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">disableCTrace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">elementId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">elementId</span><span class="p">);</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s2">&quot;mousemove&quot;</span><span class="p">,</span> <span class="nx">onmousemove</span><span class="p">);</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s2">&quot;mouseout&quot;</span><span class="p">,</span> <span class="nx">onmouseout</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+<span class="p">})(</span><span class="nx">Awe</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nb">document</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

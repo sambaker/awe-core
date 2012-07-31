@@ -1,0 +1,197 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-dom.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-dom.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p><em>* {{{ Awe.env }}} *</em></p>
+
+<p>An object describing the current environment</p>
+
+<p>|=field|=description|
+|{{{inputTouch}}}|{{{true}}} if the current environment is a touch input device|
+|{{{inputMouse}}}|{{{true}}} if the current environment is a mouse input device, opposite of {{{inputTouch}}}| <br />
+|eventDragStart|The event name for drag start events on this platform, for example mousedown or touchstart|
+|eventDragMove|The event name for drag move events on this platform|
+|eventDragEnd|The event name for drag move events on this platform|
+|eventClick|The event name for click events on this platform|</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span> <span class="o">=</span> <span class="s2">&quot;ontouchstart&quot;</span> <span class="k">in</span> <span class="nx">global</span><span class="p">;</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputMouse</span> <span class="o">=</span> <span class="o">!</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span><span class="p">;</span>
+  
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">eventDragStart</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span> <span class="o">?</span> <span class="s2">&quot;touchstart&quot;</span> <span class="o">:</span> <span class="s2">&quot;mousedown&quot;</span><span class="p">;</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">eventDragMove</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span> <span class="o">?</span> <span class="s2">&quot;touchmove&quot;</span> <span class="o">:</span> <span class="s2">&quot;mousemove&quot;</span><span class="p">;</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">eventDragEnd</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span> <span class="o">?</span> <span class="s2">&quot;touchend&quot;</span> <span class="o">:</span> <span class="s2">&quot;mouseup&quot;</span><span class="p">;</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">eventClick</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">;</span>
+
+  <span class="cm">/* Create an HTML element of the given type and attach to the given parent if not null.</span>
+<span class="cm">   * The config object can contain styles, attrs, a class and a background sprite to apply</span>
+<span class="cm">   * to the element</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">createElement</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">parent</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">k</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">el</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">type</span><span class="p">);</span>
+    <span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">backgroundSprite</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>TODO:</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;TODO:&quot;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>setBackgroundSprite(el, config.backgroundSprite);</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">styles</span> <span class="o">||</span> <span class="p">{}))</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">styles</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">attrs</span> <span class="o">||</span> <span class="p">{}))</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">attrs</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">setAttrs</span> <span class="o">||</span> <span class="p">{}))</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setAttrs</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+    <span class="p">}</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="nx">parent</span><span class="p">)</span>
+      <span class="nx">parent</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">el</span><span class="p">);</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">className</span><span class="p">)</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">className</span><span class="p">;</span>
+      
+    <span class="k">return</span> <span class="nx">el</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">injectJS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jsUrl</span><span class="p">,</span> <span class="nx">jsOnload</span><span class="p">,</span> <span class="nx">addRandomParam</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">scriptTag</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">callbackName</span> <span class="o">=</span> <span class="s2">&quot;jsonp&quot;</span> <span class="o">+</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuidNumeric</span><span class="p">();</span>
+
+      <span class="nx">_headTag</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">_headTag</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;HEAD&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+      <span class="nb">window</span><span class="p">[</span><span class="nx">callbackName</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">jsOnload</span><span class="p">)</span>
+          <span class="p">{</span>
+             <span class="nx">jsOnload</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="nx">_headTag</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">scriptTag</span><span class="p">);</span>
+          <span class="nb">window</span><span class="p">[</span><span class="nx">callbackName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">jsUrl</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">jsUrl</span> <span class="o">+=</span> <span class="s1">&#39;?&#39;</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">jsUrl</span> <span class="o">+=</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">jsUrl</span> <span class="o">+=</span> <span class="s2">&quot;callback=&quot;</span><span class="o">+</span><span class="nx">callbackName</span><span class="p">;</span>
+
+      <span class="nx">scriptTag</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;SCRIPT&quot;</span><span class="p">);</span>
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s1">&#39;text/javascript&#39;</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">addRandomParam</span> <span class="p">)</span>
+      <span class="p">{</span>
+          <span class="nx">jsUrl</span> <span class="o">+=</span> <span class="s2">&quot;&amp;randomParam=&quot;</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">jsUrl</span><span class="p">;</span>
+      <span class="nx">_headTag</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">scriptTag</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">requestAnimationFrameShim</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span>  <span class="nx">global</span><span class="p">.</span><span class="nx">requestAnimationFrame</span>       <span class="o">||</span>
+            <span class="nx">global</span><span class="p">.</span><span class="nx">webkitRequestAnimationFrame</span> <span class="o">||</span> 
+            <span class="nx">global</span><span class="p">.</span><span class="nx">mozRequestAnimationFrame</span>    <span class="o">||</span> 
+            <span class="nx">global</span><span class="p">.</span><span class="nx">oRequestAnimationFrame</span>      <span class="o">||</span> 
+            <span class="nx">global</span><span class="p">.</span><span class="nx">msRequestAnimationFrame</span>     <span class="o">||</span> 
+            <span class="kd">function</span><span class="p">(</span> <span class="nx">callback</span> <span class="p">){</span>
+              <span class="nx">global</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
+            <span class="p">};</span>
+  <span class="p">})();</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><em>* {{{ Awe.addAnimationCallback(callback, [config]) }}} *</em></p>
+
+<p>Begins an animation loop, calling the supplied callback each frame until the callback returns true to signify completion or
+until {{{Awe.cancelAnimationCallback(handle)}}} is called to cancel the animation. This method will use the browser's
+{{{requestAnimationFrame}}} function if possible which is optimized for rendering and animation callbacks and generally runs
+at 60fps if practical.</p>
+
+<p>|=param|=description|
+|{{{callback}}}|a function to call on an interval. Its parameters will be {{{callback(deltaTime, totalTime, iteration)}}}|
+|{{{config.interval}}}|callback interval in seconds. Don't use this unless you need a specific interval since modern browsers will pick the optimal animation callback interval by default|
+|{{{config.onCancel}}}|function to call when this animation is cancelled|
+|{{{config.onEnd}}}|function to call when this animation has ended|</p>
+
+<p><strong>Returns</strong> a handle that can be passed to {{{Awe.cancelAnimationCallback(handle)}}}</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="kd">var</span> <span class="nx">startTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">lastTime</span> <span class="o">=</span> <span class="nx">startTime</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">handle</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="kd">var</span> <span class="nx">cancelled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">iteration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">interval</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">requestAnimationFrameShim</span><span class="p">(</span><span class="kd">function</span> <span class="nx">wrapper</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">time</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">cancelled</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">callback</span><span class="p">(</span><span class="nx">time</span> <span class="o">-</span> <span class="nx">lastTime</span><span class="p">,</span> <span class="nx">time</span> <span class="o">-</span> <span class="nx">startTime</span><span class="p">,</span> <span class="nx">iteration</span><span class="o">++</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">requestAnimationFrameShim</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">cancelled</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">config</span><span class="p">.</span><span class="nx">onCancel</span> <span class="o">&amp;&amp;</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onCancel</span><span class="p">();</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">config</span><span class="p">.</span><span class="nx">onEnd</span> <span class="o">&amp;&amp;</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onEnd</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">lastTime</span> <span class="o">=</span> <span class="nx">time</span><span class="p">;</span>
+      <span class="p">})</span>
+      <span class="nx">handle</span><span class="p">.</span><span class="nx">cancel</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">cancelled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">intervalId</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">time</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span><span class="p">(</span><span class="nx">time</span> <span class="o">-</span> <span class="nx">lastTime</span><span class="p">,</span> <span class="nx">time</span> <span class="o">-</span> <span class="nx">startTime</span><span class="p">,</span> <span class="nx">iteration</span><span class="o">++</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">config</span><span class="p">.</span><span class="nx">onEnd</span> <span class="o">&amp;&amp;</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onEnd</span><span class="p">();</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">intervalId</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">intervalId</span><span class="p">);</span>
+            <span class="nx">intervalId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">lastTime</span> <span class="o">=</span> <span class="nx">time</span><span class="p">;</span>
+      <span class="p">},</span> <span class="nx">config</span><span class="p">.</span><span class="nx">interval</span><span class="p">);</span>
+      <span class="nx">handle</span><span class="p">.</span><span class="nx">cancel</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">intervalId</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">config</span><span class="p">.</span><span class="nx">onCancel</span> <span class="o">&amp;&amp;</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onCancel</span><span class="p">();</span>
+          <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">intervalId</span><span class="p">);</span>
+          <span class="nx">intervalId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">handle</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><em>* {{{ Awe.cancelAnimationCallback(handle) }}} *</em></p>
+
+<p>Cancels an animation requested with {{{Awe.addAnimationCallback}}}.</p>
+
+<p>|=param|=description|
+|{{{handle}}}|an animation handle returned by {{{Awe.addAnimationCallback}}}|</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handle</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">handle</span> <span class="o">&amp;&amp;</span> <span class="nx">handle</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Cancels an event to stop propogation. Use this to swallow events in listeners.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+    <span class="p">}</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+  
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">global</span><span class="p">.</span><span class="nx">attachEvent</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>    
+      <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+    
+    <span class="nx">e</span><span class="p">.</span><span class="nx">cancelBubble</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">returnValue</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="p">})(</span><span class="nx">Awe</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nb">document</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

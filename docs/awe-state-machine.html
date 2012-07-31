@@ -1,0 +1,186 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-state-machine.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-state-machine.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>= Awe.StateMachine =</p>
+
+<p>A general state machine. More documentation to come...</p>
+
+<p>State contains any of:
+ {{{allowOnly}}} - array with 0 or more states (or null)
+ {{{doNotAllow}}} - array with 1 or more states (or null)
+ {{{start}}} function (or null)
+ {{{update}}} function (or null)
+ {{{end}}} function (or null)</p>             </td>             <td class="code">               <div class="highlight"><pre>  
+  <span class="kd">var</span> <span class="nx">StateMachine</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">StateMachine</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">stateMap</span><span class="p">,</span> <span class="nx">initialStateId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">_i</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    
+    <span class="kd">function</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;[awe.sm] &quot;</span> <span class="o">+</span> <span class="nx">str</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">_sm_trace_na</span><span class="p">(</span><span class="nx">from</span><span class="p">,</span><span class="nx">to</span><span class="p">)</span>    <span class="p">{</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="nx">from</span> <span class="o">+</span> <span class="s2">&quot; -&gt; &quot;</span> <span class="o">+</span> <span class="nx">to</span> <span class="o">+</span> <span class="s2">&quot; not allowed&quot;</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">_sm_trace_e</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>           <span class="p">{</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="s2">&quot;enter      : &quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">_sm_trace_x</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>           <span class="p">{</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="s2">&quot;exit       : &quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">_sm_trace_restart</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>     <span class="p">{</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="s2">&quot;restart    : &quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">_sm_trace_transition</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="p">{</span> <span class="nx">_sm_trace</span><span class="p">(</span><span class="s2">&quot;transition : &quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">);</span> <span class="p">}</span>
+        
+    <span class="nx">StateMachine</span><span class="p">.</span><span class="nx">stateMachines</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_i</span><span class="p">);</span>
+  
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">states</span> <span class="o">=</span> <span class="nx">stateMap</span> <span class="o">||</span> <span class="p">[];</span>
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">addState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">id</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s2">&quot;Duplicate state added!&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">state</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">getCurrentStateId</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">;</span>
+    <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Request a state that is assumed to be a transitional state and call the supplied callback on completion.
+The callback will not be called if the transition state is interrupted, but you can prevent this by making
+the transition state uninterruptable: pass an empty array in the transition states allowOnly field, which will
+disallow any transitions while the state is active. The transitionCompleteCallback should then change state
+once the transition is complete.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_i</span><span class="p">.</span><span class="nx">requestTransitionState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_transition</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+      
+      <span class="kd">var</span> <span class="nx">lastArg</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">onDone</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">isType</span><span class="p">(</span><span class="nx">lastArg</span><span class="p">,</span> <span class="nb">String</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">onDone</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">(</span><span class="nx">lastArg</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">isType</span><span class="p">(</span><span class="nx">lastArg</span><span class="p">,</span> <span class="nb">Array</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">lastArg</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">onDone</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">lastArg</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">lastArg</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">_i</span><span class="p">.</span><span class="nx">requestTransitionState</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">lastArg</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">(</span><span class="nx">state</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">isType</span><span class="p">(</span><span class="nx">lastArg</span><span class="p">,</span> <span class="nb">Function</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">onDone</span> <span class="o">=</span> <span class="nx">lastArg</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">onDone</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s2">&quot;Last argument of StateMachine.requestTransitionState must be an on-complete callback, a state id string or an array of state ids&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_i</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">_i</span><span class="p">.</span><span class="nx">transitionCompleteCallback</span> <span class="o">=</span> <span class="nx">onDone</span><span class="p">;</span>
+  
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">].</span><span class="nx">update</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="s2">&quot;ERROR: Transition states must have an update method, otherwise they will never be able to complete.&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Remove the transition complete callback if the switch to the transition state was refused.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_i</span><span class="p">.</span><span class="nx">transitionCompleteCallback</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><em>* {{{ restartCurrentState() }}} *</em></p>
+
+<p>Restarts the current state, causing its end and start functions to be called. Note that {{{requestState}}}
+will never restart the current state, it will just leave a matching state running which makes this call
+necessary to force a restart.</p>
+
+<p><strong>{{{returns}}}</strong> {{{true}}} if the transition completed, {{{false}}} if the transition was disallowed.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_i</span><span class="p">.</span><span class="nx">restartCurrentState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_restart</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">rcs</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">restartingCurrentState</span><span class="p">;</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">restartingCurrentState</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">success</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_i</span><span class="p">,</span> <span class="p">[</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span><span class="mi">0</span><span class="p">)));</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">restartingCurrentState</span> <span class="o">=</span> <span class="nx">rcs</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">success</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">requestOrRestartState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">state</span> <span class="o">==</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">restartCurrentState</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_i</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_i</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Request a change to the supplied state. If a current state exists that will be checked for any conditions that
+disallow transition to the new state.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">id</span><span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;Cannot request a null state&#39;</span><span class="p">;</span>
+      
+      <span class="kd">var</span> <span class="nx">nextState</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nextState</span><span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;Specified state does not exist&#39;</span><span class="p">;</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">)</span> <span class="p">{</span>
+      
+        <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span> <span class="o">==</span> <span class="nx">id</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">_i</span><span class="p">.</span><span class="nx">restartingCurrentState</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_e</span><span class="p">(</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot; (no change)&quot;</span><span class="p">);</span>
+          <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">currentState</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">];</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateDone</span> <span class="o">&amp;&amp;</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">allowOnly</span> <span class="o">&amp;&amp;</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">allowOnly</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_na</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateDone</span> <span class="o">&amp;&amp;</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">doNotAllow</span> <span class="o">&amp;&amp;</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">doNotAllow</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_na</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_x</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">currentState</span><span class="p">.</span><span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">currentState</span><span class="p">.</span><span class="nx">end</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">currentState</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">nextState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">nextState</span><span class="p">.</span><span class="nx">_startTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+        <span class="nx">nextState</span><span class="p">.</span><span class="nx">runTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">_i</span><span class="p">.</span><span class="nx">tracing</span><span class="p">)</span> <span class="nx">_sm_trace_e</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">nextState</span><span class="p">.</span><span class="nx">start</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">nextState</span><span class="p">.</span><span class="nx">start</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">nextState</span><span class="p">,</span> <span class="p">[</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span><span class="mi">1</span><span class="p">)));</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+      
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">currentState</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">states</span><span class="p">[</span><span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateId</span><span class="p">];</span>
+      <span class="nx">currentState</span><span class="p">.</span><span class="nx">runTime</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">_startTime</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">currentState</span> <span class="o">&amp;&amp;</span> <span class="nx">currentState</span><span class="p">.</span><span class="nx">update</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Update the current state and if it's a transition state, call the transition state callback once the
+transition state's update returns true to signify completion</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">currentState</span><span class="p">.</span><span class="nx">update</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">currentState</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">transitionCompleteCallback</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">transitionCompleteCallback</span><span class="p">;</span>
+          <span class="nx">_i</span><span class="p">.</span><span class="nx">transitionCompleteCallback</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+          <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateDone</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          <span class="nx">callback</span><span class="p">();</span>
+          <span class="nx">_i</span><span class="p">.</span><span class="nx">currentStateDone</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+      
+    <span class="k">if</span> <span class="p">(</span><span class="nx">initialStateId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">requestState</span><span class="p">(</span><span class="nx">initialStateId</span><span class="p">);</span>
+    <span class="p">}</span>
+  
+    <span class="k">return</span> <span class="nx">_i</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="nx">StateMachine</span><span class="p">.</span><span class="nx">stateMachines</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="nx">StateMachine</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">StateMachine</span><span class="p">.</span><span class="nx">stateMachines</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">StateMachine</span><span class="p">.</span><span class="nx">stateMachines</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">update</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">Awe</span> <span class="o">:</span> <span class="nx">exports</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

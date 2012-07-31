@@ -1,0 +1,151 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-ui.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-ui.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Stack of popups and their associated state</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">_popupStack</span> <span class="o">=</span> <span class="p">[];</span>
+    
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: Helper function to ensure that we have an element. Allows called </span>
+<span class="cm">   * of ui* functions to pass in either an HTML element object or an id string, </span>
+<span class="cm">   * in which case we will look it up by id.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">ensureElement</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">el</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">el</span><span class="p">)</span> <span class="k">throw</span> <span class="s2">&quot;cannot find element with id &#39;&quot;</span> <span class="o">+</span> <span class="nx">element</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">el</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">element</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  
+  <span class="cm">/* </span>
+<span class="cm">   * purpose: safely get the top of _popupStack. Returns null if stack is empty.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">getTopOfPopupStack</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">_popupStack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nx">_popupStack</span><span class="p">[</span><span class="nx">_popupStack</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  
+  <span class="cm">/*</span>
+<span class="cm">   * purpose: listens to mousedown events in the document and handles the </span>
+<span class="cm">   * dismissing of popups. If the mousedown even occured inside the bounds of </span>
+<span class="cm">   * an open popup, all popups up to, but not including it are dismissed.</span>
+<span class="cm">   * If the mousedown was outside the bounds of all popups, the entire popup</span>
+<span class="cm">   * stack will be dismissed.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">onMouseDown</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>TEMP: Workaround for failing hit test in apps</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">clickDoesNotHidePopup</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    <span class="k">while</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">xHasPoint</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageX</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">pageY</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">Awe</span><span class="p">.</span><span class="nx">hidePopup</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+        <span class="nx">t</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  
+  <span class="cm">/*</span>
+<span class="cm">   * purpose: listen to keypress events and dismiss the top-most popup if the</span>
+<span class="cm">   * ESC key is pressed.</span>
+<span class="cm">   */</span>
+  <span class="kd">var</span> <span class="nx">onKeyDown</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">==</span> <span class="mi">27</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="nx">Awe</span><span class="p">.</span><span class="nx">hidePopup</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">element</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  
+  <span class="cm">/* </span>
+<span class="cm">   * method: Awe.uiPopup</span>
+<span class="cm">   *</span>
+<span class="cm">   * Attach pop-up behavior to the given element and ensure it is visible. this</span>
+<span class="cm">   * means that clicking anywhere outside the given element will cause the element</span>
+<span class="cm">   * to be hidden and dismissedCallback, if one is provided will be invoked.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Popups can be nested by specifying a parentPopup.</span>
+<span class="cm">   *</span>
+<span class="cm">   * If no parentPopup is provided, this method will cause any and all previously</span>
+<span class="cm">   * shown popups to be automatically dismissed, and for their respective </span>
+<span class="cm">   * dismissedCallbacks be invoked.</span>
+<span class="cm">   *</span>
+<span class="cm">   * If current top-most popup is not the parentPopup, the popup stack will be </span>
+<span class="cm">   * popped and dismissed until a popup matching the given parent is found or until</span>
+<span class="cm">   * no more popups are visible.</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">showPopup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">dismissedCallback</span><span class="p">,</span> <span class="nx">parentPopup</span><span class="p">)</span> <span class="p">{</span>
+  
+    <span class="nx">element</span> <span class="o">=</span> <span class="nx">ensureElement</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+                        
+    <span class="nx">parentPopup</span> <span class="o">=</span> <span class="nx">ensureElement</span><span class="p">(</span><span class="nx">parentPopup</span><span class="p">);</span>
+    
+    <span class="kd">var</span> <span class="nx">top</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    <span class="k">while</span><span class="p">(</span><span class="nx">top</span> <span class="o">&amp;&amp;</span> <span class="nx">top</span><span class="p">.</span><span class="nx">element</span> <span class="o">!=</span> <span class="nx">parentPopup</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">top</span><span class="p">.</span><span class="nx">element</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">)</span> <span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">();</span>
+      <span class="nx">_popupStack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+      <span class="nx">top</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    <span class="p">}</span>
+      
+    <span class="nx">element</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;visible&quot;</span><span class="p">;</span>
+  
+    <span class="nx">_popupStack</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="nx">element</span><span class="o">:</span><span class="nx">element</span><span class="p">,</span>
+      <span class="nx">parentPopup</span><span class="o">:</span><span class="nx">parentPopup</span><span class="p">,</span>
+      <span class="nx">dismissedCallback</span><span class="o">:</span><span class="nx">dismissedCallback</span><span class="p">,</span>
+      <span class="nx">previousonmousedownCb</span><span class="o">:</span><span class="nb">document</span><span class="p">.</span><span class="nx">onmousedown</span>
+    <span class="p">});</span>
+
+  <span class="p">}</span>
+  
+  <span class="cm">/* </span>
+<span class="cm">   * method: Awe.hidePopup</span>
+<span class="cm">   *</span>
+<span class="cm">   * If element is the current top-most popup, hide it. Otherwise, hide all popups </span>
+<span class="cm">   * in the current stack starting from the top upto and including the element. </span>
+<span class="cm">   * If element is not in the stack, has the side-effect of dimissing all popups.</span>
+<span class="cm">   */</span>
+  <span class="nx">Awe</span><span class="p">.</span><span class="nx">hidePopup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">dismissing</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="nx">element</span> <span class="o">=</span> <span class="nx">ensureElement</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+    
+    <span class="kd">var</span> <span class="nx">top</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    
+    <span class="k">while</span><span class="p">(</span><span class="nx">top</span> <span class="o">&amp;&amp;</span> <span class="nx">top</span><span class="p">.</span><span class="nx">element</span> <span class="o">!=</span> <span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">top</span><span class="p">.</span><span class="nx">element</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">)</span> <span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+      <span class="nx">_popupStack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+      <span class="nx">top</span> <span class="o">=</span> <span class="nx">getTopOfPopupStack</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">top</span><span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;Element not found in the popup stack (Awe.hidePopup)&#39;</span><span class="p">;</span>
+    
+    <span class="nx">element</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">)</span> <span class="nx">top</span><span class="p">.</span><span class="nx">dismissedCallback</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+    <span class="nx">_popupStack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="nx">xAddEventListener</span><span class="p">(</span> <span class="nb">document</span><span class="p">,</span> <span class="s2">&quot;mousedown&quot;</span><span class="p">,</span> <span class="nx">onMouseDown</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
+  <span class="nx">xAddEventListener</span><span class="p">(</span> <span class="nb">document</span><span class="p">,</span> <span class="s2">&quot;keydown&quot;</span><span class="p">,</span> <span class="nx">onKeyDown</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
+
+    
+<span class="p">})(</span><span class="nx">Awe</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nb">document</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

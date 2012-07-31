@@ -1,0 +1,234 @@
+<!DOCTYPE html>  <html> <head>   <title>awe-core.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-core.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Artefact Web Extensions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Copyright 2012, Artefact Group LLC</span>
+<span class="cm"> * Licensed under MIT.</span>
+<span class="cm"> */</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">global</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>This is a library of all-purpose, general utility functions contained within
+the <code>Awe</code> namespace.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Create Awe</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">Awe</span> <span class="o">=</span> <span class="p">{}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Awe.isArray(o)</h2>
+
+<p>Tests whether object <code>o</code> is an array</p>
+
+<h3>params</h3>
+
+<p><code>o</code> - the object to test</p>
+
+<h3>returns</h3>
+
+<p><code>true</code> if <code>o</code> is an array, otherwise <code>false</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">isArray</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">o</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Awe.isArrayOrString(o)</h2>
+
+<p>Tests whether object <code>o</code> is either an array or a string</p>
+
+<h3>params</h3>
+
+<p><code>o</code> - the object to test</p>
+
+<h3>returns</h3>
+
+<p><code>true</code> if <code>o</code> is an array or string, otherwise <code>false</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">isArrayOrString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">o</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">||</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nb">String</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span><span class="p">);</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Awe.isType(o, type)</h2>
+
+<p>Tests whether object <code>o</code> is of type <code>type</code></p>
+
+<h3>params</h3>
+
+<p><code>o</code> - the object to test
+<code>type</code> - the type to compare against</p>
+
+<h3>returns</h3>
+
+<p><code>true</code> if <code>o</code> is of type <code>type</code>, otherwise <code>false</code></p>
+
+<h3>example usage</h3>
+
+<p><code>Awe.isType([], Array)         // true</code></p>
+
+<p><code>Awe.isType(new Date(), Date)  // true</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">isType</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">o</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nx">type</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Awe.isFunction(o)</h2>
+
+<p>Tests whether object <code>o</code> is a function</p>
+
+<h3>params</h3>
+
+<p><code>o</code> - the object to test</p>
+
+<h3>returns</h3>
+
+<p><code>true</code> if <code>o</code> is a function, otherwise <code>false</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">isFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">o</span> <span class="o">&amp;&amp;</span> <span class="nx">o</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nb">Function</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Awe.clamp(n, range1, range2)</h2>
+
+<p>Clamps <code>n</code> between <code>range1</code> and <code>range2</code></p>
+
+<h3>params</h3>
+
+<p><code>n</code> - The number to be clamped
+<code>range1</code> - An upper or lower limit to clamp to
+<code>range2</code> - An upper or lower limit to clamp to</p>
+
+<h3>returns</h3>
+
+<p>The clamped value</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">clamp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">range1</span><span class="p">,</span> <span class="nx">range2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">range2</span> <span class="o">&lt;</span> <span class="nx">range1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">range1</span><span class="p">;</span>
+      <span class="nx">range1</span> <span class="o">=</span> <span class="nx">range2</span><span class="p">;</span>
+      <span class="nx">range2</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">range1</span><span class="p">),</span> <span class="nx">range2</span><span class="p">);</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h2>Awe.sign(n)</h2>
+
+<p>Returns the positive/negative direction of n</p>
+
+<h3>params</h3>
+
+<p><code>n</code> - The number to return the sign of</p>
+
+<h3>returns</h3>
+
+<p>-1 if <code>n</code> &lt; 0, otherwise, 1</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">sign</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Awe.positiveOrZero(n)</h2>
+
+<p>Ensure n is a positive value or zero.</p>
+
+<h3>params</h3>
+
+<p><code>n</code> - The number to evaluate</p>
+
+<h3>returns</h3>
+
+<p>The value of n clamped to <code>(n &gt;= 0)</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">positiveOrZero</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="nx">n</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>Awe.acosSafe(n)</h2>
+
+<p>Clamp n between -1 and 1 before passing to Math.acos to prevent an exception.
+Ensure that this makes sense for your parameters - it is assumed they will be close to
+the clamped range but allows computational errors to be safely ignored.</p>
+
+<h3>params</h3>
+
+<p><code>n</code> - The number to evaluate</p>
+
+<h3>returns</h3>
+
+<p>The value of <code>acos(n)</code> where n is clamped to the valid range of inputs</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">acosSafe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">acos</span><span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">clamp</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>Awe.getQueryParam(name, url)</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getQueryParam</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span> <span class="o">||</span> <span class="nx">global</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
+    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span><span class="s2">&quot;\\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span><span class="s2">&quot;\\\]&quot;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">regexS</span> <span class="o">=</span> <span class="s2">&quot;[\\?&amp;]&quot;</span><span class="o">+</span><span class="nx">name</span><span class="o">+</span><span class="s2">&quot;=([^&amp;#]*)&quot;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span> <span class="nx">regexS</span> <span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">regex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span> <span class="nx">url</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">results</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Awe</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">array</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">Awe</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">thisArg</span><span class="p">,</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span>
+        <span class="o">++</span><span class="nx">i</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p><em>* <code>Awe.objectToString(o)</code> *</em></p>
+
+<p>Convert an object to its string representation</p>
+
+<p>|=param|=description|
+|<code>o</code>|object to turn to string|</p>
+
+<p><strong><code>returns</code></strong> a string representation suitable for console logging</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">objectToString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Do something more interesting in the future?</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">_nextGuid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Returns a string unique to this session</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuid</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;_guid_&quot;</span> <span class="o">+</span> <span class="o">++</span><span class="nx">_nextGuid</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Returns a unique positive integral number > 0</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuidNumeric</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">++</span><span class="nx">_nextGuid</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Classes</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">hexToInt</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;0&quot;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;1&quot;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;2&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;3&quot;</span><span class="o">:</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;4&quot;</span><span class="o">:</span><span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;5&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;6&quot;</span><span class="o">:</span><span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;7&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span>
+    <span class="s2">&quot;8&quot;</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span>
+    <span class="s2">&quot;9&quot;</span><span class="o">:</span><span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;a&quot;</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;b&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span>
+    <span class="s2">&quot;c&quot;</span><span class="o">:</span><span class="mi">12</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="o">:</span><span class="mi">12</span><span class="p">,</span>
+    <span class="s2">&quot;d&quot;</span><span class="o">:</span><span class="mi">13</span><span class="p">,</span><span class="s2">&quot;D&quot;</span><span class="o">:</span><span class="mi">13</span><span class="p">,</span>
+    <span class="s2">&quot;e&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span><span class="s2">&quot;E&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+    <span class="s2">&quot;f&quot;</span><span class="o">:</span><span class="mi">15</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="o">:</span><span class="mi">15</span><span class="p">,</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
+accessors to r/g/b/a components and CSS color strings.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">Color</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">_i</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">toHex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">hex</span><span class="p">;</span>
+    <span class="p">}</span>
+  
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">toRGBA</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">alpha</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">alpha</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alpha</span> <span class="o">=</span> <span class="nx">_i</span><span class="p">.</span><span class="nx">a</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="s2">&quot;rgba(&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">r</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">g</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">b</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">alpha</span><span class="o">+</span><span class="s2">&quot;)&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+  
+    <span class="nx">_i</span><span class="p">.</span><span class="nx">toRGB</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s2">&quot;rgba(&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">r</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">g</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">b</span><span class="o">+</span><span class="s2">&quot;)&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="nx">color</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">hex</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="p">(</span><span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]];</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">g</span> <span class="o">=</span> <span class="p">(</span><span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">4</span><span class="p">]];</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="p">(</span><span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="nx">hexToInt</span><span class="p">[</span><span class="nx">color</span><span class="p">[</span><span class="mi">6</span><span class="p">]];</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">color</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;rgb(&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="nx">color</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">color</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;rgba(&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="nx">color</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+      <span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">color</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">g</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+      <span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">color</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+      <span class="nx">_i</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+      <span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">color</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_i</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">_i</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+
+  <span class="nx">global</span><span class="p">.</span><span class="nx">Awe</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">;</span>
+
+<span class="p">})(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="k">this</span> <span class="o">:</span> <span class="nx">exports</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
