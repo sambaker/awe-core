@@ -145,9 +145,11 @@
   // |{{{o}}}|object to turn to string|
   // 
   // **{{{returns}}}** a string representation suitable for console logging
+  // returns null in IE7 which lacks native JSON support
   Awe.objectToString = function(o) {
-    // Do something more interesting in the future?
-    return JSON.stringify(o);
+    if (typeof(JSON) != "undefined") {
+      return JSON.stringify(o);
+    }
   }
 
   var _nextGuid = 0;
@@ -179,7 +181,7 @@
     "c":12,"C":12,
     "d":13,"D":13,
     "e":14,"E":14,
-    "f":15,"F":15,
+    "f":15,"F":15
   }
   
   // Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
@@ -227,6 +229,10 @@
         _i.a = 1;
       }
     }
+  }
+
+  Awe.trim = function(str) {
+    return str.replace(/^\s+|\s+$/, '');
   }
 
   global.Awe = Awe;
