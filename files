@@ -5,4 +5,5 @@ awe-state-machine.js
 awe-ui.js
 awe-ue.js
 awe-tools.js
-
+awe-dom.js
+awe-drag.js

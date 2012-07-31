@@ -146,29 +146,76 @@
     handle && handle.cancel();
   }
 
-  // Cancels an event to stop propogation. Use this to swallow events in listeners.
+  // Cancels an event to stop propagation. Use this to swallow events in listeners.
   Awe.cancelEvent = function(e) {
-    if (e == null) {
-      e = global.event;
-    }
   
-    if (!e) {
-      return;
-    }
-  
-    if (!global.attachEvent) {
+    e = e || global.event;
 
-      if (e.stopPropagation) {
-        e.stopPropagation();
-      }
-      e.preventDefault();    
-      return false
-    }
+    if (!e) return;
+  
+    e.stopPropagation && e.stopPropagation();
+    e.preventDefault && e.preventDefault();
     
     e.cancelBubble = true;
-    e.returnValue = false;
-    
+    e.returnValue = false;   
     return false;
   }
 
+  // gets the absolute X pixel offset from upper-left of document
+  Awe.absX = function(domNode) {
+    var retVal = 0;
+    
+    while(domNode) {
+      retVal += domNode.offsetLeft;
+      retVal -= domNode.scrollLeft;
+      domNode = domNode.offsetParent;
+    }
+    
+    return retVal;
+  }
+ 
+  // gets the absolute Y pixel offset from upper-left of document 
+  Awe.absY = function(domNode) {
+    var retVal = 0;
+    
+    while(domNode) {
+      retVal += domNode.offsetTop;
+      retVal -= domNode.scrollTop;
+      domNode = domNode.offsetParent;
+    }
+    
+    return retVal;
+  }
+  
+  // gets/sets the relative X pixel offset from parent
+  Awe.relX = function(domNode,x) {
+    if (x) { 
+      domNode.floatX = x;
+      domNode.style.left = x + "px";
+      return x;
+    }
+    
+    if (domNode.floatX) {
+      return domNode.floatX;
+    }
+    
+    return domNode.offsetLeft;
+  }
+  
+  // gets/sets the relative Y pixel offset from parent
+  Awe.relY = function(domNode,y) {
+    if (y) {
+      domNode.floatY = y;
+      domNode.style.top = y + "px";
+      return y;
+    }
+    
+    if (domNode.floatY) {
+      return domNode.floatY;
+    }
+    
+    return domNode.offsetTop;
+  }
+  
+  
 })(Awe, this, document);
