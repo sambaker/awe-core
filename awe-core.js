@@ -215,6 +215,7 @@
     config = config || {};
     var filters = config.filters;
     var updater = config.updater;
+    var cancelEvents = config.cancelEvents === undefined ? true : config.cancelEvents;
     var hasAnimatingFilter = false;
     
     // Convert a single drag filter
@@ -395,7 +396,7 @@
     }
       
     function dragMove(evt) {
-      Awe.cancelEvent(evt);
+      cancelEvents && Awe.cancelEvent(evt);
       touch.now = getClientPos(evt);
       var pos = applyFilters(touch.now);
       var drag = processDrag(touch.now, pos);
@@ -412,7 +413,7 @@
         return;
       }
       touch.dragging = false;
-      evt && Awe.cancelEvent(evt);
+      cancelEvents && evt && Awe.cancelEvent(evt);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
       xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
@@ -444,7 +445,7 @@
     }
     
     function dragStart(evt) {
-      Awe.cancelEvent(evt);
+      cancelEvents && Awe.cancelEvent(evt);
       
       // Cancel any existing animation
       endAnimation();
