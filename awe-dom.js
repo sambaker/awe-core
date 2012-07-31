@@ -27,6 +27,39 @@
   Awe.env.eventDragEnd = Awe.env.inputTouch ? "touchend" : "mouseup";
   Awe.env.eventClick = "click";
 
+  Awe.env.transformPropertyName = "";
+  if (navigator.userAgent.match(/MSIE 9|MSIE 10/)) { Awe.env.transformPropertyName = "msTransform"; }
+  if (navigator.userAgent.match(/Safari|iPad|iPhone|iPod|Chrome/)) { Awe.env.transformPropertyName = "WebkitTransform"; }
+  if (navigator.userAgent.match(/Opera/)) { Awe.env.transformPropertyName = "OTransform"; }
+  if (navigator.userAgent.match(/Firefox/)) { Awe.env.transformPropertyName = "MozTransform"; }
+  // TODO: add Android transform name
+  
+  Awe.addEventListener = function( element, eventName, callback, doCapture ) {
+    doCapture = doCapture || false;
+    
+    if (element.addEventListener) {
+      element.addEventListener( eventName, callback, doCapture );
+      return;
+    }
+    
+    if (element.attachEvent) {
+      element.attachEvent( "on" + eventName, callback );
+    }
+  }
+
+  Awe.removeEventListener = function( element, eventName, callback, doCapture ) {
+    doCapture = doCapture || false;
+    
+    if (element.removeEventListener) {
+      element.removeEventListener( eventName, callback, doCapture );
+      return;
+    }
+    
+    if (element.detachEvent) {
+      element.detachEvent( "on" + eventName, callback );
+    }
+  }
+  
   /* Create an HTML element of the given type and attach to the given parent if not null.
    * The config object can contain styles, attrs, a class and a background sprite to apply
    * to the element
@@ -147,8 +180,7 @@
   }
 
   // Cancels an event to stop propagation. Use this to swallow events in listeners.
-  Awe.cancelEvent = function(e) {
-  
+  Awe.cancelEvent = function(e) { 
     e = e || global.event;
 
     if (!e) return;
@@ -159,6 +191,27 @@
     e.cancelBubble = true;
     e.returnValue = false;   
     return false;
+  }
+
+  // returns true if element has a whole word className of cls
+  Awe.hasClass = function(ele,cls)
+  {
+    patt = new RegExp( "\\b" + cls + "\\b", "g" );
+    return ele.className.match(patt);
+  }
+  
+  // removes a whole word className from element's class string
+  Awe.removeClass = function(ele,cls)
+  {
+    patt = new RegExp( "\\b" + cls + "\\b", "g" );
+    ele.className = trim(ele.className.replace(patt,""));
+  }
+  
+  // adds a className to an element's class string without redundancy
+  Awe.addClass = function(ele,cls)
+  {
+    removeClass(ele,cls);
+    ele.className += " " + cls;
   }
 
   // gets the absolute X pixel offset from upper-left of document
