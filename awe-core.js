@@ -273,7 +273,7 @@
       }
     }
     
-    function processDrag(clientPos, pos, start) {
+    function processDrag(clientPos, pos, evt) {
       if (touch.now) {
         touch.maxDistanceSquared = Math.max(touch.maxDistanceSquared, (touch.now.x - touch.start.x) * (touch.now.x - touch.start.x) + (touch.now.y - touch.start.y) * (touch.now.y - touch.start.y));
       } else {
@@ -286,8 +286,10 @@
         pos: { x: pos.x, y: pos.y },
         dragTime: (Date.now() - touch.startTime) * 0.001,
         maxDistanceSquared: touch.maxDistanceSquared,
-        velocity: { x: 0, y: 0 }
+        velocity: { x: 0, y: 0 },
+        event: evt
       }
+      
       if (touch.lastDrag) {
         newDrag.clientDelta = {
           x: newDrag.clientPos.x - touch.lastDrag.clientPos.x,
@@ -399,7 +401,7 @@
       cancelEvents && Awe.cancelEvent(evt);
       touch.now = getClientPos(evt);
       var pos = applyFilters(touch.now);
-      var drag = processDrag(touch.now, pos);
+      var drag = processDrag(touch.now, pos, evt);
       if (updater && updater.move) {
         updater.move(el, drag);
       }
@@ -429,7 +431,7 @@
       // animating filter
       if (config.onDragEnd && evt) {
         var pos = getClientPos(evt);
-        config.onDragEnd(processDrag(pos, pos));
+        config.onDragEnd(processDrag(pos, pos, evt));
       }
       if (touch.updateIntervalId && !hasAnimatingFilter) {
         clearInterval(touch.updateIntervalId);
@@ -474,7 +476,7 @@
 
       var pos = applyFilters(touch.now);
       
-      var drag = processDrag(touch.now, pos);
+      var drag = processDrag(touch.now, pos, evt);
 
       if (updater.start) {
         updater.start(el, drag);
