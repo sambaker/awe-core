@@ -273,13 +273,13 @@
   
   // gets or sets the relative X pixel offset from parent
   Awe.relX = function(domNode,x) {
-    if (x) { 
+    if (x !== undefined) { 
       domNode.floatX = x;
       domNode.style.left = x + "px";
       return x;
     }
     
-    if (domNode.floatX) {
+    if (domNode.floatX !== undefined) {
       return domNode.floatX;
     }
     
@@ -289,7 +289,7 @@
   
   // gets or sets the relative Y pixel offset from parent
   Awe.relY = function(domNode,y) {
-    if (y) {
+    if (y !== undefined) {
       domNode.floatY = y;
       domNode.style.top = y + "px";
       return y;
@@ -305,7 +305,7 @@
   
   // gets or sets the relative X and Y pixel offset from parent
   Awe.relXY = function(domNode,x,y) {
-    if (x&&y) {
+    if (x !== undefined && y !== undefined) {
       domNode.style.left = x + "px";
       domNode.style.top = y + "px";
       domNode.floatX = x;
@@ -313,7 +313,7 @@
       return { x: x, y: y }
     }
     
-    if (domNode.floatX && domNode.floatY) {
+    if (domNode.floatX !== undefined && domNode.floatY !== undefined) {
       return { x : domNode.floatX, y : domNode.floatY }
     }
     
@@ -324,13 +324,13 @@
   
   // gets or sets the width of a DOM node
   Awe.width = function(domNode,w) {
-    if (w) {
+    if (w !== undefined) {
       domNode.style.width = w + "px";
       domNode.floatW = w;
       return w;
     }
     
-    if (domNode.floatW) {
+    if (domNode.floatW !== undefined) {
       return domNode.floatW;
     }
     
@@ -340,13 +340,13 @@
   
   // gets or sets the height of a DOM node
   Awe.height = function(domNode,h) {
-    if (h) {
+    if (h !== undefined) {
       domNode.style.height = h + "px";
       domNode.floatH = h;
       return h;
     }
     
-    if (domNode.floatH) {
+    if (domNode.floatH !== undefined) {
       return domNode.floatH;
     }
     

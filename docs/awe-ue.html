@@ -72,10 +72,11 @@
     <span class="nx">closeThis</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">;</span>
     <span class="nx">closeThis</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Close this error message&quot;</span><span class="p">;</span>
     
-    <span class="nx">xAddEventListener</span><span class="p">(</span> <span class="nx">closeThis</span><span class="p">,</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">hideOnErrorPrompt</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
+    <span class="nx">Awe</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span> <span class="nx">closeThis</span><span class="p">,</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">hideOnErrorPrompt</span><span class="p">,</span> <span class="kc">true</span> <span class="p">);</span>
     
     <span class="nx">_ui</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">closeThis</span><span class="p">);</span>
   <span class="p">}</span>
+  
   
   <span class="cm">/* </span>
 <span class="cm">   * purpose: hide the user interface show after detecting an unhandled error.</span>
