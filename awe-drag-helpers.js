@@ -11,5 +11,12 @@ i/* misc helpers to be used with dragging
     }
   }
 
+  Awe.VerticalDragUpdater = function() {
+    var _i = this;
+    _i.move = function(el, evt) {
+      el.style.top = xTop(el) + evt.delta.y + "px";
+    }
+  }
+
 })(Awe, this, document);
 
