@@ -271,7 +271,7 @@
     return retVal;
   }
   
-  // gets/sets the relative X pixel offset from parent
+  // gets or sets the relative X pixel offset from parent
   Awe.relX = function(domNode,x) {
     if (x) { 
       domNode.floatX = x;
@@ -287,41 +287,7 @@
     return domNode.offsetLeft;
   }
   
-  // gets/sets the relative X offset using transform for perf
-  Awe.translateX = function(domNode,x) {
-    if (x) {
-      domNode.floatX = x;
-      var y = domNode.floatY || Awe.relY(domNode);
-      domNode.style[Awe.env.transformPropertyName] = "translate(" + x + "px," + y + "px)";
-      return x;
-    }
-    
-    if (domNode.floatX) {
-      return domNode.floatX;
-    }
-    
-    domNode.floatX = domNode.offsetLeft;
-    return domNode.offsetLeft;
-  }
-  
-  // gets/sets the relative X offset using accelerated transform for perf
-  Awe.translate3dX = function(domNode,x) {
-    if (x) {
-      domNode.floatX = x;
-      var y = domNode.floatY || Awe.relY(domNode);
-      domNode.style[Awe.env.transformPropertyName] = "translate3d(" + x + "px," + y + "px,0px)";
-      return x;
-    }
-    
-    if (domNode.floatX) {
-      return domNode.floatX;
-    }
-    
-    domNode.floatX = domNode.offsetLeft;
-    return domNode.offsetLeft;
-  }
-  
-  // gets/sets the relative Y pixel offset from parent
+  // gets or sets the relative Y pixel offset from parent
   Awe.relY = function(domNode,y) {
     if (y) {
       domNode.floatY = y;
@@ -337,45 +303,30 @@
     return domNode.offsetTop;
   }
   
-  // get/sets the relative Y offset using transform for perf
-  Awe.translateY = function(domNode,y) {
-    if (y) {
-      domNode.floatY = y;  
-      var x = domNode.floatX || Awe.relX(domNode);  
-      domNode.style[Awe.env.transformPropertyName] = "translate(" + x + "px," + y + "px)";
-      return y;
+  // gets or sets the relative X and Y pixel offset from parent
+  Awe.relXY = function(domNode,x,y) {
+    if (x&&y) {
+      domNode.style.left = x + "px";
+      domNode.style.top = y + "px";
+      domNode.floatX = x;
+      domNode.floatY = y;
+      return { x: x, y: y }
     }
     
-    if (domNode.floatY) {
-      return domNode.floatY;
+    if (domNode.floatX && domNode.floatY) {
+      return { x : domNode.floatX, y : domNode.floatY }
     }
     
+    domNode.floatX = domNode.offsetLeft;
     domNode.floatY = domNode.offsetTop;
-    return domNode.offsetTop;
+    return { x: domNode.offsetLeft, y: domNode.offsetTop }
   }
   
-  // get/sets the relative Y offset using accelerated transform for perf
-  Awe.translate3dY = function(domNode,y) {
-    if (y) {
-      domNode.floatY = y;  
-      var x = domNode.floatX || Awe.relX(domNode);  
-      domNode.style[Awe.env.transformPropertyName] = "translate3d(" + x + "px," + y + "px,0px)";
-      return y;
-    }
-    
-    if (domNode.floatY) {
-      return domNode.floatY;
-    }
-    
-    domNode.floatY = domNode.offsetTop;
-    return domNode.offsetTop;
-  }
-  
-  // gets/sets the width of a DOM node
+  // gets or sets the width of a DOM node
   Awe.width = function(domNode,w) {
     if (w) {
-      domNode.floatW = w;
       domNode.style.width = w + "px";
+      domNode.floatW = w;
       return w;
     }
     
@@ -387,10 +338,11 @@
     return domNode.offsetWidth;
   }
   
-  // gets/sets the height of a DOM node
+  // gets or sets the height of a DOM node
   Awe.height = function(domNode,h) {
     if (h) {
       domNode.style.height = h + "px";
+      domNode.floatH = h;
       return h;
     }
     
@@ -402,24 +354,6 @@
     return domNode.offsetHeight;
   }
   
-  // alias relX and relY with higher perf if available
-  if ( Awe.env.transformPropertyName )
-  {
-    Awe.relX = Awe.translateX;
-    Awe.relY = Awe.translateY;
-    
-    if (navigator.userAgent.match(/Safari|iPad|iPhone|iPod|Chrome/)) { 
-      Awe.relX = Awe.translate3dX;
-      Awe.relY = Awe.translate3dY;
-    }
-
-  }
   
 })(Awe, this, document);
 
-
-//    if ( _i.isSilk )
-//    {
-//      evt.timeStamp = new Date(evt.timeStamp).getTime();
-//    }
-//(navigator.userAgent.toLowerCase().indexOf("silk") > -1) ||

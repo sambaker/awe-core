@@ -221,8 +221,8 @@
       }
       touch.dragging = false;
       cancelEvents && evt && Awe.cancelEvent(evt);
-      xRemoveEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
-      xRemoveEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
+      Awe.removeEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
+      Awe.removeEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
       Awe.forEach(filters, function(filter) {
         if ((immediate || !filter.animates) && filter.end) {
@@ -291,42 +291,23 @@
         config.onDragStart(drag);
       }
 
-      xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
-      xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
+      Awe.addEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
+      Awe.addEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
 
 //      if (config.onDragUpdate) {
       touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 16);
 //      }
     }
     
-    xAddEventListener(el, Awe.env.eventDragStart, dragStart);
+    Awe.addEventListener(el, Awe.env.eventDragStart, dragStart);
     
     el._disableDrag = function() {
-      xRemoveEventListener(el, Awe.env.eventDragStart, dragStart);
+      Awe.removeEventListener(el, Awe.env.eventDragStart, dragStart);
       // Make sure any in-progress drags have their listeners removed
       dragEnd(null, true);
     }
   }
   
-  // Awe.left = function(el, value) {
-  //   if (el.style && el.style.left !== undefined) {
-  //     if (value === undefined) {
-  //       value = parseInt(el.style.left)
-  //       if (isNaN(value)) value = xGetComputedStyle(el, "left", 1);
-  //       if (isNaN(value)) value = 0;
-  //     } else {
-  //       el.style.left = value + "px";
-  //     }
-  //   } else if (el.style && el.style.pixelLeft !== undefined) {
-  //     if (value === undefined) {
-  //       value = el.style.pixelLeft;
-  //     } else {
-  //       el.style.pixelLeft = value;
-  //     }
-  //   }
-  //   return value;
-  // }
-
   /*
    * method: Awe.disableDrag
    * 
@@ -345,7 +326,7 @@
     
     _i.getAnchor = function(el, pos) {
       el = anchorEl || el;
-      return { x: xLeft(el) - pos.x, y: xTop(el) - pos.y }
+      return { x: Awe.relX(el) - pos.x, y: Awe.relY(el) - pos.y }
     }
   }
   

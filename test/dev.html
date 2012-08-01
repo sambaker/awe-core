@@ -62,19 +62,19 @@ function squareClick(clr)
 
 function dragStart(dragEventObj)
 {
-  console.log("start:",dragEventObj);
+  //console.log("start:",dragEventObj);
 }
 
 
 function dragMove(dragEventObj)
 {
-  console.log("move:",dragEventObj);
+  cur = Awe.relXY(r);
+  Awe.relXY( r, cur.x + dragEventObj.clientDelta.x, cur.y + dragEventObj.clientDelta.y );
 }
 
 
 function dragEnd(dragEventObj)
 {
-  console.log("end:",dragEventObj);
 }
 
 
@@ -100,6 +100,7 @@ function startup()
     onDragEnd: dragEnd
   }
 
+  r = document.getElementById("red");
   Awe.enableDrag( document.getElementById("red"), dragConfig );
   
   //document.getElementById("red").addEventListener( "mousedown", function() { squareClick("red"); }, false );
@@ -112,8 +113,7 @@ function startup()
 
 function test()
 {
-  alert(getComputedStyle(document.getElementById("content"))["left"]);
-  alert(xLeft("content"));
+  Awe.disableDrag( document.getElementById("red") );
 }
 
 
