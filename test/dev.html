@@ -14,7 +14,7 @@
   top:50px;
   width:100px;
   height:100px;
-  background-color:#FF0000;
+  background-color:#FFbbbb;
 }
 
 #blue
@@ -49,10 +49,10 @@
 <script src="../awe-state-machine.js"></script>
 <script src="../awe-drag.js"></script>
 <script src="../awe-drag-helpers.js"></script>
-<script src="../test/x/x.js"></script>
 
 <script>
  
+ var r;
 
 function squareClick(clr)
 {
@@ -63,18 +63,39 @@ function squareClick(clr)
 function dragStart(dragEventObj)
 {
   //console.log("start:",dragEventObj);
+  _pos = Awe.relXY(r);
+
+  _T = Date.now();
+  _C = 0;
 }
 
 
 function dragMove(dragEventObj)
 {
-  cur = Awe.relXY(r);
-  Awe.relXY( r, cur.x + dragEventObj.clientDelta.x, cur.y + dragEventObj.clientDelta.y );
+  ++_C;
+  _pos.x += dragEventObj.delta.x;
+  _pos.y += dragEventObj.delta.y;
+  Awe.relX(r);
+  Awe.relY(r);
+  Awe.relXY(r);
+//  r.style.left = _pos.x + "px";
+//  r.style.top = _pos.y + "px";
+  //r.style.WebkitTransform = "translate3d("+_pos.x+"px,"+_pos.y+"px, 0)";
+  //console.log(r.left, r.top);
+  //Awe.relXY( r, _pos.x, _pos.y );
 }
 
+function dragUpdate() {
+  r.style.left = _pos.x + "px";
+  r.style.top = _pos.y + "px";
+}
 
 function dragEnd(dragEventObj)
 {
+  var now = Date.now();
+  _F = _C / ((now - _T) / 1000);
+  console.log("Move FPS = ", _F);
+  _pos = null;
 }
 
 
@@ -93,15 +114,26 @@ function startup()
   text.id = "text";
   text.innerHTML = "Awe environment = " + Awe.objectToString(Awe.env) + "asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf "
   
-  var dragConfig = {
-    updater: {},
+  var dragConfigFast = {
+    //updater: {},
     onDragStart: dragStart,
     onDragMove: dragMove,
+    onDragEnd: dragEnd,
+    onDragUpdate: dragUpdate
+  }
+
+  var dragConfigSlow = {
+    //updater: {},
+    onDragStart: dragStart,
+    onDragMove: function(e) {
+      dragMove(e);
+      dragUpdate();
+    },
     onDragEnd: dragEnd
   }
 
   r = document.getElementById("red");
-  Awe.enableDrag( document.getElementById("red"), dragConfig );
+  Awe.enableDrag( document.getElementById("red"), dragConfigFast );
   
   //document.getElementById("red").addEventListener( "mousedown", function() { squareClick("red"); }, false );
   //document.getElementById("blue").addEventListener( "mousedown", function() { squareClick("blue"); }, false );
@@ -113,6 +145,7 @@ function startup()
 
 function test()
 {
+console.log("B");
   Awe.disableDrag( document.getElementById("red") );
 }
 
@@ -125,14 +158,6 @@ window.onload = startup;
 </head>
   
 <body>
-
-<div id="outer">
-  <div id="content">
-    Testing the Awe library
-  </div>
-</div>
-
-<button onclick="test()">Test</button>
  
 <div id="blue"></div>
 <div id="red"></div>
