@@ -279,11 +279,6 @@
       return x;
     }
     
-    if (domNode.floatX !== undefined) {
-      return domNode.floatX;
-    }
-    
-    domNode.floatX = domNode.offsetLeft;
     return domNode.offsetLeft;
   }
   
@@ -295,11 +290,6 @@
       return y;
     }
     
-    if (domNode.floatY) {
-      return domNode.floatY;
-    }
-    
-    domNode.floatY = domNode.offsetTop;
     return domNode.offsetTop;
   }
   
@@ -313,12 +303,6 @@
       return { x: x, y: y }
     }
     
-    if (domNode.floatX !== undefined && domNode.floatY !== undefined) {
-      return { x : domNode.floatX, y : domNode.floatY }
-    }
-    
-    domNode.floatX = domNode.offsetLeft;
-    domNode.floatY = domNode.offsetTop;
     return { x: domNode.offsetLeft, y: domNode.offsetTop }
   }
   
@@ -330,11 +314,6 @@
       return w;
     }
     
-    if (domNode.floatW !== undefined) {
-      return domNode.floatW;
-    }
-    
-    domNode.floatW = domNode.offsetWidth;
     return domNode.offsetWidth;
   }
   
@@ -346,11 +325,6 @@
       return h;
     }
     
-    if (domNode.floatH !== undefined) {
-      return domNode.floatH;
-    }
-    
-    domNode.floatH = domNode.offsetHeight;
     return domNode.offsetHeight;
   }
   
