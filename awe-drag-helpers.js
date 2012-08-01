@@ -1,4 +1,4 @@
-i/* misc helpers to be used with dragging 
+/* misc helpers to be used with dragging 
   *
   */
 
