@@ -18,7 +18,7 @@ We will not be supporting all browsers. The expected supported browser set is:
 
 There are no external dependencies besides having a sufficiently compliant browser.
 
-Documentation is published here http://sambaker.github.com/awe-core/doc/
+Documentation is published here http://sambaker.github.com/awe-core/docs/
 
 Installing
 ----------
@@ -35,8 +35,11 @@ There is a nifty gem that will make it easy to install AWE into the Rails 3.1 as
 How to document
 ---------------
 
-When adding Javascript files to the library, add those filenames to doc/index.html and document the functionality you add using Wiki Creole formatting
-(http://www.wikicreole.org/).
+Comments beginning with // are parsed as markdown format comments and added to the HTML output by docco. Each function/class/constant should have some form of // comment.
+
+To generate documentation to the docs folder, run:
+
+docco *.js
 
 Load doc/index.html into a browser to test the formatting of the docs.
 
@@ -44,5 +47,5 @@ To automatically publish changes to http://sambaker.github.com/awe-core/doc/ whe
 
 git config --add remote.origin.push +refs/heads/master:refs/heads/gh-pages
 
-Then when you do a git push, the repo will be pushed to the gh-pages branch that github uses to serve http://sambaker.github.com/awe-core
+Then when you do a git push, the repo will be pushed to the gh-pages branch that github uses to serve http://sambaker.github.com/awe-core/docs/
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>  <html> <head>   <title>awe-core.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-core.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<!DOCTYPE html>  <html> <head>   <title>awe-core.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="awe-compatibility.html">                 awe-compatibility.js               </a>                                           <a class="source" href="awe-core.html">                 awe-core.js               </a>                                           <a class="source" href="awe-dom.html">                 awe-dom.js               </a>                                           <a class="source" href="awe-drag-helpers.html">                 awe-drag-helpers.js               </a>                                           <a class="source" href="awe-drag.html">                 awe-drag.js               </a>                                           <a class="source" href="awe-state-machine.html">                 awe-state-machine.js               </a>                                           <a class="source" href="awe-tools.html">                 awe-tools.js               </a>                                           <a class="source" href="awe-ue.html">                 awe-ue.js               </a>                                           <a class="source" href="awe-ui.html">                 awe-ui.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               awe-core.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * Artefact Web Extensions</span>
 <span class="cm"> *</span>
 <span class="cm"> * Copyright 2012, Artefact Group LLC</span>
@@ -121,7 +121,22 @@ the clamped range but allows computational errors to be safely ignored.</p>
 
 <p>The value of <code>acos(n)</code> where n is clamped to the valid range of inputs</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">acosSafe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">acos</span><span class="p">(</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">clamp</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>Awe.getQueryParam(name, url)</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getQueryParam</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>Awe.getQueryParam(name, url)</h2>
+
+<p>Pull a query parameter out of a url</p>
+
+<h3>params</h3>
+
+<p><code>name</code> - The query param to retrieve
+<code>url</code> - The url to pull from (optional, defaults to global.location.href)</p>
+
+<h3>returns</h3>
+
+<p>The value of the query param</p>
+
+<h3>example usage</h3>
+
+<p><code>Awe.getQueryParam('username', 'http://webservice.com/auth?username=Bob Dylan')  // returns "Bob Dylan"</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getQueryParam</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span> <span class="o">||</span> <span class="nx">global</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
     <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\[]/</span><span class="p">,</span><span class="s2">&quot;\\\[&quot;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[\]]/</span><span class="p">,</span><span class="s2">&quot;\\\]&quot;</span><span class="p">);</span>
     <span class="kd">var</span> <span class="nx">regexS</span> <span class="o">=</span> <span class="s2">&quot;[\\?&amp;]&quot;</span><span class="o">+</span><span class="nx">name</span><span class="o">+</span><span class="s2">&quot;=([^&amp;#]*)&quot;</span><span class="p">;</span>
@@ -130,39 +145,86 @@ the clamped range but allows computational errors to be safely ignored.</p>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">results</span><span class="p">)</span>
       <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-  <span class="p">}</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h2>Awe.forEach(array, callback, thisArg)</h2>
 
-  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span><span class="p">)</span> <span class="p">{</span>
+<p>Essentially same behavior as Array.prototype.forEach in https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
+that uses native code when available, otherwise a javascript approximation.</p>
+
+<h3>params</h3>
+
+<p><code>array</code> - the array to iterate over
+<code>callback</code> - the callback to call for each element. The callback will receive three parameters for each iteration: the object, it's index and the array itself
+<code>thisArg</code> - an optional scope that the callback will be able to access via <code>this</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">forEach</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">Awe</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">array</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">Awe</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">thisArg</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">thisArg</span> <span class="o">=</span> <span class="nx">thisArg</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
       <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
       <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">thisArg</span><span class="p">,</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">);</span>
+        <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">thisArg</span><span class="p">,</span> <span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">array</span><span class="p">);</span>
         <span class="o">++</span><span class="nx">i</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p><em>* <code>Awe.objectToString(o)</code> *</em></p>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h2>Awe.objectToString(o)</h2>
 
 <p>Convert an object to its string representation</p>
 
-<p>|=param|=description|
-|<code>o</code>|object to turn to string|</p>
+<h3>params</h3>
 
-<p><strong><code>returns</code></strong> a string representation suitable for console logging</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">objectToString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Do something more interesting in the future?</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
+<p><code>o</code> - object to turn to string</p>
+
+<h3>returns</h3>
+
+<p>A string representation suitable for console logging. Conversion fails gracefully in IE7 which lacks native JSON support.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">objectToString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">JSON</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="s2">&quot;Not supported&quot;</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="kd">var</span> <span class="nx">_nextGuid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Returns a string unique to this session</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuid</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">_nextGuid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h2>Awe.getUid()</h2>
+
+<p>Generate a unique string id</p>
+
+<h3>returns</h3>
+
+<p>a string that's unique to this session</p>
+
+<h3>example usage</h3>
+
+<p><code>div.id = Awe.getUid();</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getUid</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuid</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="s2">&quot;_guid_&quot;</span> <span class="o">+</span> <span class="o">++</span><span class="nx">_nextGuid</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Returns a unique positive integral number > 0</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuidNumeric</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>Awe.getUidNumeric()</h2>
+
+<p>Generate a unique numeric, integral id > 0</p>
+
+<h3>returns</h3>
+
+<p>a string that's unique to this session</p>
+
+<h3>example usage</h3>
+
+<p><code>object.id = Awe.getUidNumeric();</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">getUidNumeric</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuidNumeric</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="o">++</span><span class="nx">_nextGuid</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Classes</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">hexToInt</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>Awe.trim(str)</h2>
+
+<p>Trim whitespace from a string</p>
+
+<h3>params</h3>
+
+<p><code>str</code> - the string to trim</p>
+
+<h3>returns</h3>
+
+<p>A new copy of <code>str</code> with leading and trailing whitespace removed</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">trim</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^\s+|\s+$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">hexToInt</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;0&quot;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
     <span class="s2">&quot;1&quot;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;2&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
@@ -178,10 +240,32 @@ the clamped range but allows computational errors to be safely ignored.</p>
     <span class="s2">&quot;c&quot;</span><span class="o">:</span><span class="mi">12</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="o">:</span><span class="mi">12</span><span class="p">,</span>
     <span class="s2">&quot;d&quot;</span><span class="o">:</span><span class="mi">13</span><span class="p">,</span><span class="s2">&quot;D&quot;</span><span class="o">:</span><span class="mi">13</span><span class="p">,</span>
     <span class="s2">&quot;e&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span><span class="s2">&quot;E&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
-    <span class="s2">&quot;f&quot;</span><span class="o">:</span><span class="mi">15</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="o">:</span><span class="mi">15</span><span class="p">,</span>
+    <span class="s2">&quot;f&quot;</span><span class="o">:</span><span class="mi">15</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="o">:</span><span class="mi">15</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
-accessors to r/g/b/a components and CSS color strings.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">Color</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h2>[CLASS] Awe.Color</h2>
+
+<p>Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
+accessors to r/g/b/a components and CSS color strings.</p>
+
+<h3>example usage</h3>
+
+<p><code>var color = new Awe.Color("#8fdff4");</code></p>
+
+<p>Assigns "$8fdff4":</p>
+
+<p><code>el.style.color = color.toHex();</code></p>
+
+<p>Assigns "rgb(143,223,244)":</p>
+
+<p><code>el.style.color = color.toRGB();</code></p>
+
+<p>Assigns "rgba(143,223,244,1)":</p>
+
+<p><code>el.style.color = color.toRGBA();</code></p>
+
+<p>Assigns [143, 223, 244]:</p>
+
+<p><code>var rgb = [color.r, color.g, color.b];</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">Color</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">_i</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     
     <span class="nx">_i</span><span class="p">.</span><span class="nx">toHex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -196,7 +280,7 @@ accessors to r/g/b/a components and CSS color strings.</p>             </td>    
     <span class="p">}</span>
   
     <span class="nx">_i</span><span class="p">.</span><span class="nx">toRGB</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="s2">&quot;rgba(&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">r</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">g</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">b</span><span class="o">+</span><span class="s2">&quot;)&quot;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="s2">&quot;rgb(&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">r</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">g</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="nx">_i</span><span class="p">.</span><span class="nx">b</span><span class="o">+</span><span class="s2">&quot;)&quot;</span><span class="p">;</span>
     <span class="p">}</span>
         
     <span class="k">if</span> <span class="p">(</span><span class="nx">color</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="p">{</span>
@@ -225,7 +309,6 @@ accessors to r/g/b/a components and CSS color strings.</p>             </td>    
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
-
 
   <span class="nx">global</span><span class="p">.</span><span class="nx">Awe</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">;</span>
 
