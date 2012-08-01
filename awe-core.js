@@ -141,6 +141,18 @@
 
   // Awe.getQueryParam(name, url)
   // ----------------------------
+  // 
+  // Pull a query parameter out of a url
+  // 
+  // ### params
+  // `name` - The query param to retrieve
+  // `url` - The url to pull from (optional, defaults to global.location.href)
+  // 
+  // ### returns
+  // The value of the query param
+  // 
+  // ### example usage
+  // `Awe.getQueryParam('username', 'http://webservice.com/auth?username=Bob Dylan')  // returns "Bob Dylan"`
   Awe.getQueryParam = function(name, url) {
     url = url || global.location.href;
     name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -152,49 +164,94 @@
     return results[1];
   }
 
+  // Awe.forEach(array, callback, thisArg)
+  // -------------------------------------
+  // 
+  // Essentially same behavior as Array.prototype.forEach in https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
+  // that uses native code when available, otherwise a javascript approximation.
+  // 
+  // ### params
+  // `array` - the array to iterate over
+  // `callback` - the callback to call for each element. The callback will receive three parameters for each iteration: the object, it's index and the array itself
+  // `thisArg` - an optional scope that the callback will be able to access via `this`
   if (Array.prototype.forEach) {
     Awe.forEach = function(array, callback, thisArg) {
       array.forEach(callback, thisArg);
     }
   } else {
     Awe.forEach = function(array, callback, thisArg) {
+      thisArg = thisArg || this;
       var length = array.length;
       var i = 0;
       while (i < length) {
-        callback.call(thisArg, array[i], i);
+        callback.call(thisArg, array[i], i, array);
         ++i;
       }
     }
   }
 
-  // ** ` Awe.objectToString(o) ` **
+  // Awe.objectToString(o)
+  // ---------------------
   //
   // Convert an object to its string representation
   //
-  // |=param|=description|
-  // |`o`|object to turn to string|
+  // ### params
+  // `o` - object to turn to string
   // 
-  // **{{{returns}}}** a string representation suitable for console logging
-  // returns null in IE7 which lacks native JSON support
+  // ### returns
+  // A string representation suitable for console logging. Conversion fails gracefully in IE7 which lacks native JSON support.
   Awe.objectToString = function(o) {
     if (typeof(JSON) != "undefined") {
       return JSON.stringify(o);
     }
+    return "Not supported";
   }
 
-  var _nextGuid = 0;
-  
-  // Returns a string unique to this session
-  Awe.getGuid = function() {
+  var _nextGuid = 0;  
+  // Awe.getUid()
+  // -------------
+  // 
+  // Generate a unique string id
+  // 
+  // ### returns
+  // a string that's unique to this session
+  // 
+  // ### example usage
+  // 
+  // `div.id = Awe.getUid();`
+  Awe.getUid = Awe.getGuid = function() {
     return "_guid_" + ++_nextGuid;
   }
   
-  // Returns a unique positive integral number > 0
-  Awe.getGuidNumeric = function() {
+  // Awe.getUidNumeric()
+  // -------------
+  // 
+  // Generate a unique numeric, integral id > 0
+  // 
+  // ### returns
+  // a string that's unique to this session
+  // 
+  // ### example usage
+  // 
+  // `object.id = Awe.getUidNumeric();`
+  Awe.getUidNumeric = Awe.getGuidNumeric = function() {
     return ++_nextGuid;
   }
 
-  // Classes
+  // Awe.trim(str)
+  // -------------
+  // 
+  // Trim whitespace from a string
+  // 
+  // ### params
+  // `str` - the string to trim
+  // 
+  // ### returns
+  // A new copy of `str` with leading and trailing whitespace removed
+  Awe.trim = function(str) {
+    return str.replace(/^\s+|\s+$/, '');
+  }
+
   var hexToInt = {
     "0":0,
     "1":1,
@@ -214,8 +271,30 @@
     "f":15,"F":15
   }
   
+  // [CLASS] Awe.Color
+  // -----------------
+  // 
   // Color class parses CSS color specs in different formats ("#rrggbb", "rgb(r, g, b)" or "rgba(r, g, b, a)") and provides
   // accessors to r/g/b/a components and CSS color strings.
+  // 
+  // ### example usage
+  // `var color = new Awe.Color("#8fdff4");`
+  // 
+  // Assigns "$8fdff4":
+  // 
+  // `el.style.color = color.toHex();`
+  // 
+  // Assigns "rgb(143,223,244)":
+  // 
+  // `el.style.color = color.toRGB();`
+  // 
+  // Assigns "rgba(143,223,244,1)":
+  // 
+  // `el.style.color = color.toRGBA();`
+  // 
+  // Assigns [143, 223, 244]:
+  // 
+  // `var rgb = [color.r, color.g, color.b];`
   Awe.Color = function(color) {
     var _i = this;
     
@@ -231,7 +310,7 @@
     }
   
     _i.toRGB = function() {
-      return "rgba("+_i.r+","+_i.g+","+_i.b+")";
+      return "rgb("+_i.r+","+_i.g+","+_i.b+")";
     }
         
     if (color[0] == "#") {
@@ -259,10 +338,6 @@
         _i.a = 1;
       }
     }
-  }
-
-  Awe.trim = function(str) {
-    return str.replace(/^\s+|\s+$/, '');
   }
 
   global.Awe = Awe;

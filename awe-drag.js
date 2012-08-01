@@ -18,6 +18,7 @@
   Awe.enableDrag = function(el, config) {
   
     config = config || {};
+    var listenToDocument = config.listenToDocument || !Awe.env.inputTouch;
     var filters = config.filters;
     var updater = config.updater;
     var hasAnimatingFilter = false;
@@ -220,8 +221,8 @@
       }
       touch.dragging = false;
       cancelEvents && evt && Awe.cancelEvent(evt);
-      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
-      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      xRemoveEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
+      xRemoveEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
       Awe.forEach(filters, function(filter) {
         if ((immediate || !filter.animates) && filter.end) {
@@ -290,8 +291,9 @@
         config.onDragStart(drag);
       }
 
-      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
-      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
+      xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
+      
 //      if (config.onDragUpdate) {
       touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 16);
 //      }
