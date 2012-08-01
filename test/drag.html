@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  
+<title>Scratch Space for Testing Awe Development</title>
+
+<style>
+
+#red 
+{
+  position:static;
+  left:50px;
+  top:50px;
+  width:100px;
+  height:100px;
+  background-color:#FF0000;
+}
+
+#blue
+{
+  position:static;
+  left:40px;
+  top:40px;
+  width:120px;
+  height:120px;
+  background-color:#0000FF;
+}
+
+#content 
+{
+  position:absolute;
+  left:50%;
+  top:100px;
+}
+
+#outer
+{
+  position:absolute;
+  left:100px;
+  top:100px;
+  width:800px;
+}
+
+</style>
+
+<script src="../awe-core.js"></script>
+<script src="../awe-dom.js"></script>
+<script src="../awe-drag.js"></script>
+<script src="../awe-state-machine.js"></script>
+<script src="../test/x/x.js"></script>
+
+<script>
+ 
+
+function squareClick(clr)
+{
+  console.log(clr);
+}
+
+
+function startup() 
+{
+  var el = document.getElementById("content");
+
+  var red = document.getElementById("red");
+  var blue = document.getElementById("blue");
+
+  Awe.enableDrag(red, {
+    cancelEvents: false,
+    anchor: new Awe.DragAnchorTopLeft(),
+    updater: new Awe.DragUpdaterTopLeft()
+//    update: new Awe.DragUpdaterTopLeft()
+  });
+  Awe.enableDrag(blue, {
+    cancelEvents: false,
+    anchor: new Awe.DragAnchorTopLeft(),
+    updater: new Awe.DragUpdaterTopLeft()
+//    update: new Awe.DragUpdaterTopLeft()
+  });
+}
+
+
+window.onload = startup;    
+
+
+</script>
+  
+</head>
+  
+<body>
+
+<div id="blue">
+  <div id="red"></div>
+</div>
+
+</body>
+
+</html>
+

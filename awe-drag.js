@@ -152,7 +152,7 @@
           }
         });
 
-        if (updater.end) {
+        if (updater && updater.end) {
           updater.end();
         }
         clearInterval(touch.updateIntervalId);
@@ -174,7 +174,7 @@
       if (animationsRunning) {
         var pos = { x: animationState.pos.x, y: animationState.pos.y };
         var drag = processDrag(pos, pos);
-        updater.move(el, drag);
+        updater && updater.move(el, drag);
         // TODO: Should this callback be called after release?
         //config.onDragMove(processDrag(clientPos, pos));
       } else {
@@ -229,7 +229,7 @@
           filter.end();
         }
       });
-      if (!hasAnimatingFilter && updater.end) {
+      if (!hasAnimatingFilter && updater && updater.end) {
         updater.end();
       }
       // TODO: Figure out how whether release events are still appropriate here when there's an
@@ -283,7 +283,7 @@
       
       var drag = processDrag(touch.now, pos, evt);
 
-      if (updater.start) {
+      if (updater && updater.start) {
         updater.start(el, drag);
       }
 
@@ -293,7 +293,7 @@
 
       xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragMove, dragMove);
       xAddEventListener(listenToDocument ? document : el, Awe.env.eventDragEnd, dragEnd);
-      
+
 //      if (config.onDragUpdate) {
       touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 16);
 //      }
