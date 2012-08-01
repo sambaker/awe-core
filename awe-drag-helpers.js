@@ -7,7 +7,7 @@
   Awe.HorizontalDragUpdater = function() {
     var _i = this;
     _i.move = function(el, evt) {
-      el.style.left = xLeft(el) + evt.delta.x + "px";
+      el.style.left = Awe.relX(el) + evt.delta.x + "px";
     }
   }
 

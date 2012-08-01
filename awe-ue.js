@@ -72,10 +72,11 @@
     closeThis.href = "/";
     closeThis.innerHTML = "Close this error message";
     
-    xAddEventListener( closeThis, "click", hideOnErrorPrompt, true );
+    Awe.addEventListener( closeThis, "click", hideOnErrorPrompt, true );
     
     _ui.appendChild(closeThis);
   }
+  
   
   /* 
    * purpose: hide the user interface show after detecting an unhandled error.

@@ -147,8 +147,8 @@
     return;
   }
   
-  xAddEventListener( document, "mousedown", onMouseDown, true );
-  xAddEventListener( document, "keydown", onKeyDown, true );
+  Awe.addEventListener( document, "mousedown", onMouseDown, true );
+  Awe.addEventListener( document, "keydown", onKeyDown, true );
 
     
 })(Awe, this, document);
