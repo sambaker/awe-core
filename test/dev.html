@@ -47,6 +47,8 @@
 <script src="../awe-core.js"></script>
 <script src="../awe-dom.js"></script>
 <script src="../awe-state-machine.js"></script>
+<script src="../awe-drag.js"></script>
+<script src="../awe-drag-helpers.js"></script>
 <script src="../test/x/x.js"></script>
 
 <script>
@@ -55,6 +57,24 @@
 function squareClick(clr)
 {
   console.log(clr);
+}
+
+
+function dragStart(dragEventObj)
+{
+  console.log("start:",dragEventObj);
+}
+
+
+function dragMove(dragEventObj)
+{
+  console.log("move:",dragEventObj);
+}
+
+
+function dragEnd(dragEventObj)
+{
+  console.log("end:",dragEventObj);
 }
 
 
@@ -72,6 +92,15 @@ function startup()
     
   text.id = "text";
   text.innerHTML = "Awe environment = " + Awe.objectToString(Awe.env) + "asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf asdf asdf asdf asdf asdf asdf sadf sdfa sdfa sdfa sdfa asdf "
+  
+  var dragConfig = {
+    updater: {},
+    onDragStart: dragStart,
+    onDragMove: dragMove,
+    onDragEnd: dragEnd
+  }
+
+  Awe.enableDrag( document.getElementById("red"), dragConfig );
   
   //document.getElementById("red").addEventListener( "mousedown", function() { squareClick("red"); }, false );
   //document.getElementById("blue").addEventListener( "mousedown", function() { squareClick("blue"); }, false );
