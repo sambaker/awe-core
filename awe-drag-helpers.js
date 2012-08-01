@@ -4,6 +4,19 @@
 
 (function(Awe, global, document, undefined) {
 
+  Awe.NullUpdater = function () {
+    var _i = this;    
+    _i.move = function(el, evt) {
+    }
+  }
+
+  Awe.NullFilter = function () {
+    var _i = this;
+    _i.move = function(el, pos) {
+      return pos;
+    }
+  }
+  
   Awe.HorizontalDragUpdater = function() {
     var _i = this;
     _i.move = function(el, evt) {
