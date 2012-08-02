@@ -249,11 +249,6 @@ at 60fps if practical.</p>
       <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">;</span>
   <span class="p">}</span>
   </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>gets or sets the relative Y pixel offset from parent</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
@@ -263,11 +258,6 @@ at 60fps if practical.</p>
       <span class="k">return</span> <span class="nx">y</span><span class="p">;</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span><span class="p">;</span>
   <span class="p">}</span>
   </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>gets or sets the relative X and Y pixel offset from parent</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relXY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
@@ -279,12 +269,6 @@ at 60fps if practical.</p>
       <span class="k">return</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">y</span> <span class="p">}</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="p">{</span> <span class="nx">x</span> <span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="p">}</span>
-    <span class="p">}</span>
-    
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">;</span>
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span><span class="p">;</span>
     <span class="k">return</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span> <span class="p">}</span>
   <span class="p">}</span>
   </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>gets or sets the width of a DOM node</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">w</span><span class="p">)</span> <span class="p">{</span>
@@ -294,11 +278,6 @@ at 60fps if practical.</p>
       <span class="k">return</span> <span class="nx">w</span><span class="p">;</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">domNode</span><span class="p">.</span><span class="nx">floatW</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatW</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatW</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetWidth</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetWidth</span><span class="p">;</span>
   <span class="p">}</span>
   </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>gets or sets the height of a DOM node</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
@@ -308,11 +287,6 @@ at 60fps if practical.</p>
       <span class="k">return</span> <span class="nx">h</span><span class="p">;</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">domNode</span><span class="p">.</span><span class="nx">floatH</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatH</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatH</span> <span class="o">=</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetHeight</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetHeight</span><span class="p">;</span>
   <span class="p">}</span>
   
