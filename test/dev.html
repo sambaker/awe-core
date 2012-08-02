@@ -49,7 +49,6 @@
 <script src="../awe-state-machine.js"></script>
 <script src="../awe-drag.js"></script>
 <script src="../awe-drag-helpers.js"></script>
-<script src="../test/x/x.js"></script>
 
 <script>
  
@@ -101,8 +100,9 @@ function startup()
   }
 
   r = document.getElementById("red");
-  Awe.enableDrag( document.getElementById("red"), dragConfig );
+  //Awe.enableDrag( document.getElementById("red"), dragConfig );
   
+  Awe.addEventListener( document.getElementById("red"), "mousedown", function() { alert("down"); }, false );
   //document.getElementById("red").addEventListener( "mousedown", function() { squareClick("red"); }, false );
   //document.getElementById("blue").addEventListener( "mousedown", function() { squareClick("blue"); }, false );
 
@@ -111,9 +111,34 @@ function startup()
 }
 
 
+function thing(i)
+{
+  Awe.relXY( rNode );
+  Awe.relXY( rNode, i, i );
+}
+
 function test()
 {
-  Awe.disableDrag( document.getElementById("red") );
+  rNode = document.getElementById("red");
+ 
+  var startTime = Date.now();
+  
+  for ( var x = 0; x < 10; x++ )
+  { 
+    for ( var i = 0; i < 600; i++ )
+    {
+      setTimeout(thing(i));
+    }
+
+    for ( var i = 600; i > -1; i-- )
+    {
+      setTimeout(thing(i));
+    }
+  }
+  
+  var endTime = Date.now();
+  
+  console.log("elapsed:" + (endTime - startTime) );
 }
 
 

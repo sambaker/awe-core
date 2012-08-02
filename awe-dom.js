@@ -32,8 +32,21 @@
   if (navigator.userAgent.match(/Safari|iPad|iPhone|iPod|Chrome/)) { Awe.env.transformPropertyName = "WebkitTransform"; }
   if (navigator.userAgent.match(/Opera/)) { Awe.env.transformPropertyName = "OTransform"; }
   if (navigator.userAgent.match(/Firefox/)) { Awe.env.transformPropertyName = "MozTransform"; }
-  // TODO: add Android transform name
-  
+  /* TODO: add Android transform name */
+
+  // Awe.addEventListener( element, eventName, callback, doCapture )
+  // ---------------------------------------------------------------
+  //
+  // Add event handler to element using attachEvent for IE7 and IE8
+  //
+  // ### params
+  // `element` - the DOM node to add handler to
+  // `eventName` - the event type to handle
+  // `callback` - the event sink
+  // `doCapture` - boolean for event capture
+  // 
+  // ### returns
+  // void
   Awe.addEventListener = function( element, eventName, callback, doCapture ) {
     doCapture = doCapture || false;
     
@@ -45,6 +58,22 @@
     element.attachEvent && element.attachEvent( "on" + eventName, callback );
   }
 
+  // Awe.removeEventListener( element, eventName, callback, doCapture )
+  // ------------------------------------------------------------------
+  //
+  // Remove an event handler that was previously and use detachEvent for IE7 and IE8
+  //
+  // ### params
+  // `element` - the DOM node to add handler to
+  // `eventName` - the event type to handle
+  // `callback` - the event sink
+  // `doCapture` - boolean for event capture
+  // 
+  // ### returns
+  // void
+  // 
+  // ### notes
+  // The parameters must exactly match the previously added event handler
   Awe.removeEventListener = function( element, eventName, callback, doCapture ) {
     doCapture = doCapture || false;
     
@@ -91,6 +120,24 @@
     return el;
   }
 
+  // Awe.injectJS( jsUrl, jsOnload, addRandomParam )
+  // ------------------------------------------------------------------
+  //
+  // gets a JSONP callback from a web service
+  //
+  // ### params
+  // `jsUrl` - the url of the resource
+  // `jsOnload` - callback function that receives the returned data
+  // `addRandomParam` - boolean to add unique param
+  // 
+  // ### returns
+  // void
+  // 
+  // ### notes
+  // Depending on the scenario you may need the addRandomParam
+  // to add a unique parameter to the URL so the request
+  // is not cached.  However, some APIs will not allow non-API
+  // params and the call will fail.
   Awe.injectJS = function(jsUrl, jsOnload, addRandomParam) {
       var scriptTag = null;
 
@@ -126,6 +173,11 @@
       _headTag.appendChild(scriptTag);
   }
 
+  // var requestAnimationFrameShim
+  // ------------------------------------------------------------------
+  //
+  // Use native animation synchronization or simulate it on 
+  // browsers not having it
   var requestAnimationFrameShim = (function() {
     return  global.requestAnimationFrame       ||
             global.webkitRequestAnimationFrame || 
@@ -210,7 +262,19 @@
     handle && handle.cancel();
   }
 
-  // Cancels an event to stop propagation. Use this to swallow events in listeners.
+  // Awe.cancelEvent(e)
+  // ------------------------------------------------------------------
+  //
+  // Cancel an event
+  //
+  // ### params
+  // `e` - the event to be cancelled
+  // 
+  // ### returns
+  // void
+  // 
+  // ### notes
+  // Used for example, to suppress disallowed keystrokes
   Awe.cancelEvent = function(e) { 
     e = e || global.event;
 
@@ -224,21 +288,54 @@
     return false;
   }
 
-  // returns true if element has a whole word className of cls
+  // Awe.hasClass = function(ele,cls)
+  // ------------------------------------------------------------------
+  //
+  // Query a DOM node class to see if it has a given class name
+  //
+  // ### params
+  // `ele` - DOM element to query
+  // `cls` - case-sensitive class name to be queried
+  // 
+  // ### returns
+  // `true` if 'ele.class' contains the class name
   Awe.hasClass = function(ele,cls)
   {
     patt = new RegExp( "\\b" + cls + "\\b", "g" );
     return ele.className.match(patt);
   }
   
-  // removes a whole word className from element's class string
+  // Awe.removeClass = function(ele,cls)
+  // ------------------------------------------------------------------
+  //
+  // Remove a class name from an element's class property
+  //
+  // ### params
+  // `ele` - DOM element to query
+  // `cls` - case-sensitive class name to be removed
+  // 
+  // ### returns
+  // void
   Awe.removeClass = function(ele,cls)
   {
     patt = new RegExp( "\\b" + cls + "\\b", "g" );
-    ele.className = trim(ele.className.replace(patt,""));
+    ele.className = Awe.trim(ele.className.replace(patt,""));
   }
   
-  // adds a className to an element's class string without redundancy
+  // Awe.addClass = function(ele,cls)
+  // ------------------------------------------------------------------
+  //
+  // Add a unique class name to an element's class property
+  //
+  // ### params
+  // `ele` - DOM element to query
+  // `cls` - case-sensitive class name to be removed
+  // 
+  // ### returns
+  // void
+  //
+  // ### notes
+  // Ensures that the added class name occurs only once
   Awe.addClass = function(ele,cls)
   {
     removeClass(ele,cls);
@@ -274,7 +371,6 @@
   // gets or sets the relative X pixel offset from parent
   Awe.relX = function(domNode,x) {
     if (x !== undefined) { 
-      domNode.floatX = x;
       domNode.style.left = x + "px";
       return x;
     }
@@ -285,7 +381,6 @@
   // gets or sets the relative Y pixel offset from parent
   Awe.relY = function(domNode,y) {
     if (y !== undefined) {
-      domNode.floatY = y;
       domNode.style.top = y + "px";
       return y;
     }
@@ -298,8 +393,6 @@
     if (x !== undefined && y !== undefined) {
       domNode.style.left = x + "px";
       domNode.style.top = y + "px";
-      domNode.floatX = x;
-      domNode.floatY = y;
       return { x: x, y: y }
     }
     
@@ -310,7 +403,6 @@
   Awe.width = function(domNode,w) {
     if (w !== undefined) {
       domNode.style.width = w + "px";
-      domNode.floatW = w;
       return w;
     }
     
@@ -321,7 +413,6 @@
   Awe.height = function(domNode,h) {
     if (h !== undefined) {
       domNode.style.height = h + "px";
-      domNode.floatH = h;
       return h;
     }
     
