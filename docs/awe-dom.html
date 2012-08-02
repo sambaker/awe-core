@@ -5,17 +5,18 @@
 <span class="cm"> * Licensed under MIT.</span>
 <span class="cm"> */</span>
 
-<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p><em>* {{{ Awe.env }}} *</em></p>
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Awe</span><span class="p">,</span> <span class="nx">global</span><span class="p">,</span> <span class="nb">document</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Awe.env</h2>
 
 <p>An object describing the current environment</p>
 
-<p>|=field|=description|
-|{{{inputTouch}}}|{{{true}}} if the current environment is a touch input device|
-|{{{inputMouse}}}|{{{true}}} if the current environment is a mouse input device, opposite of {{{inputTouch}}}| <br />
-|eventDragStart|The event name for drag start events on this platform, for example mousedown or touchstart|
-|eventDragMove|The event name for drag move events on this platform|
-|eventDragEnd|The event name for drag move events on this platform|
-|eventClick|The event name for click events on this platform|</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="p">{};</span>
+<h3>fields</h3>
+
+<p><code>inputTouch</code> : true if the current environment is a touch input device
+<code>inputMouse</code> : true if the current environment is a mouse input device
+<code>eventDragStart</code> : the event name used for a drag start, for example mousedown or touchstart
+<code>eventDragMove</code> : the event name for drag move events
+<code>eventDragEnd</code> : the event name for drag end events
+<code>eventClick</code> : the event name for click events</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="p">{};</span>
   <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span> <span class="o">=</span> <span class="s2">&quot;ontouchstart&quot;</span> <span class="k">in</span> <span class="nx">global</span><span class="p">;</span>
   <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputMouse</span> <span class="o">=</span> <span class="o">!</span><span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">inputTouch</span><span class="p">;</span>
   
@@ -28,8 +29,21 @@
   <span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/MSIE 9|MSIE 10/</span><span class="p">))</span> <span class="p">{</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">transformPropertyName</span> <span class="o">=</span> <span class="s2">&quot;msTransform&quot;</span><span class="p">;</span> <span class="p">}</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/Safari|iPad|iPhone|iPod|Chrome/</span><span class="p">))</span> <span class="p">{</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">transformPropertyName</span> <span class="o">=</span> <span class="s2">&quot;WebkitTransform&quot;</span><span class="p">;</span> <span class="p">}</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/Opera/</span><span class="p">))</span> <span class="p">{</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">transformPropertyName</span> <span class="o">=</span> <span class="s2">&quot;OTransform&quot;</span><span class="p">;</span> <span class="p">}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/Firefox/</span><span class="p">))</span> <span class="p">{</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">transformPropertyName</span> <span class="o">=</span> <span class="s2">&quot;MozTransform&quot;</span><span class="p">;</span> <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>TODO: add Android transform name</p>             </td>             <td class="code">               <div class="highlight"><pre>  
-  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addEventListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">doCapture</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">userAgent</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/Firefox/</span><span class="p">))</span> <span class="p">{</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">transformPropertyName</span> <span class="o">=</span> <span class="s2">&quot;MozTransform&quot;</span><span class="p">;</span> <span class="p">}</span>
+  <span class="cm">/* TODO: add Android transform name */</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>Awe.addEventListener( element, eventName, callback, doCapture )</h2>
+
+<p>Add event handler to element using attachEvent for IE7 and IE8</p>
+
+<h3>params</h3>
+
+<p><code>element</code> - the DOM node to add handler to
+<code>eventName</code> - the event type to handle
+<code>callback</code> - the event sink
+<code>doCapture</code> - boolean for event capture</p>
+
+<h3>returns</h3>
+
+<p>void</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addEventListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">doCapture</span> <span class="p">)</span> <span class="p">{</span>
     <span class="nx">doCapture</span> <span class="o">=</span> <span class="nx">doCapture</span> <span class="o">||</span> <span class="kc">false</span><span class="p">;</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">)</span> <span class="p">{</span>
@@ -38,9 +52,24 @@
     <span class="p">}</span>
     
     <span class="nx">element</span><span class="p">.</span><span class="nx">attachEvent</span> <span class="o">&amp;&amp;</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attachEvent</span><span class="p">(</span> <span class="s2">&quot;on&quot;</span> <span class="o">+</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span> <span class="p">);</span>
-  <span class="p">}</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Awe.removeEventListener( element, eventName, callback, doCapture )</h2>
 
-  <span class="nx">Awe</span><span class="p">.</span><span class="nx">removeEventListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">doCapture</span> <span class="p">)</span> <span class="p">{</span>
+<p>Remove an event handler that was previously and use detachEvent for IE7 and IE8</p>
+
+<h3>params</h3>
+
+<p><code>element</code> - the DOM node to add handler to
+<code>eventName</code> - the event type to handle
+<code>callback</code> - the event sink
+<code>doCapture</code> - boolean for event capture</p>
+
+<h3>returns</h3>
+
+<p>void</p>
+
+<h3>notes</h3>
+
+<p>The parameters must exactly match the previously added event handler</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">removeEventListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span><span class="p">,</span> <span class="nx">doCapture</span> <span class="p">)</span> <span class="p">{</span>
     <span class="nx">doCapture</span> <span class="o">=</span> <span class="nx">doCapture</span> <span class="o">||</span> <span class="kc">false</span><span class="p">;</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">)</span> <span class="p">{</span>
@@ -50,19 +79,28 @@
     
     <span class="nx">element</span><span class="p">.</span><span class="nx">detachEvent</span> <span class="o">&amp;&amp;</span> <span class="nx">element</span><span class="p">.</span><span class="nx">detachEvent</span><span class="p">(</span> <span class="s2">&quot;on&quot;</span> <span class="o">+</span> <span class="nx">eventName</span><span class="p">,</span> <span class="nx">callback</span> <span class="p">);</span>
   <span class="p">}</span>
-  
-  <span class="cm">/* Create an HTML element of the given type and attach to the given parent if not null.</span>
-<span class="cm">   * The config object can contain styles, attrs, a class and a background sprite to apply</span>
-<span class="cm">   * to the element</span>
-<span class="cm">   */</span>
-  <span class="nx">Awe</span><span class="p">.</span><span class="nx">createElement</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">parent</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Awe.createElement( type, [parent], config )</p>
+
+<p>Create an HTML element of the given type and attach to the given parent if not null.
+The config object can contain styles, attrs, a class and a background sprite to apply
+to the element</p>
+
+<h3>params</h3>
+
+<p><code>type</code> - the element type to create for example <code>DIV</code> or <code>INPUT</code>
+<code>parent</code> - null or optional parent node to attach new element to
+<code>config</code> - object specifying styles and attributes for new element </p>
+
+<h3>returns</h3>
+
+<p>object - the newly created element </p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">createElement</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">parent</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">k</span><span class="p">;</span>
     <span class="kd">var</span> <span class="nx">el</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">type</span><span class="p">);</span>
     <span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">el</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">backgroundSprite</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>TODO:</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;TODO:&quot;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>setBackgroundSprite(el, config.backgroundSprite);</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">backgroundSprite</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>TODO:</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;TODO:&quot;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>setBackgroundSprite(el, config.backgroundSprite);</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">}</span>
     <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">styles</span> <span class="o">||</span> <span class="p">{}))</span> <span class="p">{</span>
       <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">styles</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
     <span class="p">}</span>
@@ -80,9 +118,26 @@
       <span class="nx">el</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">className</span><span class="p">;</span>
       
     <span class="k">return</span> <span class="nx">el</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Awe.injectJS( jsUrl, jsOnload, [addRandomParam] )</h2>
 
-  <span class="nx">Awe</span><span class="p">.</span><span class="nx">injectJS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jsUrl</span><span class="p">,</span> <span class="nx">jsOnload</span><span class="p">,</span> <span class="nx">addRandomParam</span><span class="p">)</span> <span class="p">{</span>
+<p>gets a JSONP callback from a web service</p>
+
+<h3>params</h3>
+
+<p><code>jsUrl</code> - the url of the resource
+<code>jsOnload</code> - callback function that receives the returned data
+<code>addRandomParam</code> - pass true to add unique param</p>
+
+<h3>returns</h3>
+
+<p>void</p>
+
+<h3>notes</h3>
+
+<p>Depending on the scenario you may need the addRandomParam
+to add a unique parameter to the URL so the request
+is not cached.  However, some APIs will not allow non-API
+params and the call will fail.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">injectJS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jsUrl</span><span class="p">,</span> <span class="nx">jsOnload</span><span class="p">,</span> <span class="nx">addRandomParam</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">scriptTag</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
       <span class="kd">var</span> <span class="nx">callbackName</span> <span class="o">=</span> <span class="s2">&quot;jsonp&quot;</span> <span class="o">+</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">getGuidNumeric</span><span class="p">();</span>
@@ -115,9 +170,10 @@
 
       <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">jsUrl</span><span class="p">;</span>
       <span class="nx">_headTag</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">scriptTag</span><span class="p">);</span>
-  <span class="p">}</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h2>var requestAnimationFrameShim</h2>
 
-  <span class="kd">var</span> <span class="nx">requestAnimationFrameShim</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<p>variable that gives the native animation synchronization function or a
+simulation of it on browsers like Safari that do not have it</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">requestAnimationFrameShim</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span>  <span class="nx">global</span><span class="p">.</span><span class="nx">requestAnimationFrame</span>       <span class="o">||</span>
             <span class="nx">global</span><span class="p">.</span><span class="nx">webkitRequestAnimationFrame</span> <span class="o">||</span> 
             <span class="nx">global</span><span class="p">.</span><span class="nx">mozRequestAnimationFrame</span>    <span class="o">||</span> 
@@ -127,20 +183,23 @@
               <span class="nx">global</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="mi">1000</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
             <span class="p">};</span>
   <span class="p">})();</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><em>* {{{ Awe.addAnimationCallback(callback, [config]) }}} *</em></p>
+  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Awe.addAnimationCallback( callback, [config] )</h2>
 
 <p>Begins an animation loop, calling the supplied callback each frame until the callback returns true to signify completion or
-until {{{Awe.cancelAnimationCallback(handle)}}} is called to cancel the animation. This method will use the browser's
-{{{requestAnimationFrame}}} function if possible which is optimized for rendering and animation callbacks and generally runs
+until <code>Awe.cancelAnimationCallback(handle)</code> is called to cancel the animation. This method will use the browser's
+<code>requestAnimationFrame</code> function if possible which is optimized for rendering and animation callbacks and generally runs
 at 60fps if practical.</p>
 
-<p>|=param|=description|
-|{{{callback}}}|a function to call on an interval. Its parameters will be {{{callback(deltaTime, totalTime, iteration)}}}|
-|{{{config.interval}}}|callback interval in seconds. Don't use this unless you need a specific interval since modern browsers will pick the optimal animation callback interval by default|
-|{{{config.onCancel}}}|function to call when this animation is cancelled|
-|{{{config.onEnd}}}|function to call when this animation has ended|</p>
+<h3>params</h3>
 
-<p><strong>Returns</strong> a handle that can be passed to {{{Awe.cancelAnimationCallback(handle)}}}</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+<p><code>callback</code> - the function to call at each animation frame.  Its parameters will be <code>callback(deltaTime, totalTime, iteration)</code>
+<code>config.interval</code> - callback interval in seconds.  Don't use this unless you need a specific interval instead of optimized interval
+<code>config.onCancel</code> - function to call when animation is cancelled
+<code>config.onEnd</code> - function to call when animation has ended</p>
+
+<h3>returns</h3>
+
+<p>a handle that can be passed to <code>Awe.cancelAnimationCallback(handle)</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
     <span class="kd">var</span> <span class="nx">startTime</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
     <span class="kd">var</span> <span class="nx">lastTime</span> <span class="o">=</span> <span class="nx">startTime</span><span class="p">;</span>
@@ -188,14 +247,30 @@ at 60fps if practical.</p>
     
     <span class="k">return</span> <span class="nx">handle</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p><em>* {{{ Awe.cancelAnimationCallback(handle) }}} *</em></p>
+  </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>Awe.cancelAnimationCallback( handle )</h2>
 
-<p>Cancels an animation requested with {{{Awe.addAnimationCallback}}}.</p>
+<p>Cancels an animation requested with <code>Awe.addAnimationCallback</code></p>
 
-<p>|=param|=description|
-|{{{handle}}}|an animation handle returned by {{{Awe.addAnimationCallback}}}|</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handle</span><span class="p">)</span> <span class="p">{</span>
+<h3>params</h3>
+
+<p><code>handle</code> - the animation handle returned by the previously
+ requested <code>Awe.addAnimationCallback</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelAnimationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handle</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">handle</span> <span class="o">&amp;&amp;</span> <span class="nx">handle</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Cancels an event to stop propagation. Use this to swallow events in listeners.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> 
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>Awe.cancelEvent( e )</h2>
+
+<p>Cancel an event</p>
+
+<h3>params</h3>
+
+<p><code>e</code> - the event to be cancelled</p>
+
+<h3>returns</h3>
+
+<p>void</p>
+
+<h3>notes</h3>
+
+<p>Used for example, to suppress disallowed keystrokes</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">cancelEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> 
     <span class="nx">e</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">||</span> <span class="nx">global</span><span class="p">.</span><span class="nx">event</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">e</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
@@ -206,21 +281,73 @@ at 60fps if practical.</p>
     <span class="nx">e</span><span class="p">.</span><span class="nx">cancelBubble</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="nx">e</span><span class="p">.</span><span class="nx">returnValue</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>   
     <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>returns true if element has a whole word className of cls</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">hasClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h2>Awe.hasClass( ele, cls )</h2>
+
+<p>Query a DOM node class to see if it has a given class name</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>cls</code> - case-sensitive class name to be queried</p>
+
+<h3>returns</h3>
+
+<p><code>true</code> if 'ele.class' contains the class name</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">hasClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
   <span class="p">{</span>
     <span class="nx">patt</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span> <span class="s2">&quot;\\b&quot;</span> <span class="o">+</span> <span class="nx">cls</span> <span class="o">+</span> <span class="s2">&quot;\\b&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span> <span class="p">);</span>
     <span class="k">return</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">patt</span><span class="p">);</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>removes a whole word className from element's class string</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">removeClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h2>Awe.removeClass( ele, cls )</h2>
+
+<p>Remove a class name from an element's class property</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>cls</code> - case-sensitive class name to be removed</p>
+
+<h3>returns</h3>
+
+<p>void</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">removeClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
   <span class="p">{</span>
     <span class="nx">patt</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span> <span class="s2">&quot;\\b&quot;</span> <span class="o">+</span> <span class="nx">cls</span> <span class="o">+</span> <span class="s2">&quot;\\b&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span> <span class="p">);</span>
-    <span class="nx">ele</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="nx">trim</span><span class="p">(</span><span class="nx">ele</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">patt</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">));</span>
+    <span class="nx">ele</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="nx">Awe</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="nx">ele</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">patt</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">));</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>adds a className to an element's class string without redundancy</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h2>Awe.addClass( ele, cls )</h2>
+
+<p>Add a unique class name to an element's class property</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>cls</code> - case-sensitive class name to be removed</p>
+
+<h3>returns</h3>
+
+<p>void</p>
+
+<h3>notes</h3>
+
+<p>Ensures that the added class name occurs only once</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">addClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">)</span>
   <span class="p">{</span>
     <span class="nx">removeClass</span><span class="p">(</span><span class="nx">ele</span><span class="p">,</span><span class="nx">cls</span><span class="p">);</span>
     <span class="nx">ele</span><span class="p">.</span><span class="nx">className</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">cls</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>gets the absolute X pixel offset from upper-left of document</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">absX</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>Awe.absX( ele )</h2>
+
+<p>Get the absolute X position of a domNode relative to the upper-left
+corner of the document and account for scrolling</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query</p>
+
+<h3>returns</h3>
+
+<p>integer specifying pixel offset</p>
+
+<h3>notes</h3>
+
+<p>Accessing layout properties is a relatively slow operation</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">absX</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">retVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     
     <span class="k">while</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
@@ -231,7 +358,22 @@ at 60fps if practical.</p>
     
     <span class="k">return</span> <span class="nx">retVal</span><span class="p">;</span>
   <span class="p">}</span>
- </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>gets the absolute Y pixel offset from upper-left of document </p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">absY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
+ </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>Awe.absY( ele )</h2>
+
+<p>Get the absolute Y position of a domNode relative to the upper-left
+corner of the document and account for scrolling</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query</p>
+
+<h3>returns</h3>
+
+<p>integer specifying pixel offset</p>
+
+<h3>notes</h3>
+
+<p>Accessing layout properties is a relatively slow operation</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">absY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">retVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     
     <span class="k">while</span><span class="p">(</span><span class="nx">domNode</span><span class="p">)</span> <span class="p">{</span>
@@ -242,48 +384,140 @@ at 60fps if practical.</p>
     
     <span class="k">return</span> <span class="nx">retVal</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>gets or sets the relative X pixel offset from parent</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relX</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h2>Awe.relX( ele, [x] )</h2>
+
+<p>Get or set the relative X position of a domNode</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>x</code> - optional float or integer to set</p>
+
+<h3>returns</h3>
+
+<p>get - integer specifying relative pixel offset
+set - returns x value</p>
+
+<h3>notes</h3>
+
+<p>Set is a fast operation.  Get is a relatively slow operation
+but gives a correct value, regardless of units.  If the
+style units are in <code>%</code> for example, get will give 
+you the resulting integer pixel offset.  Get will give
+you the offset even if there is no style property set.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relX</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span> 
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
       <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>gets or sets the relative Y pixel offset from parent</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h2>Awe.relY( ele, [y] )</h2>
+
+<p>Get or set the relative Y position of a domNode</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>y</code> - optional float or integer to set</p>
+
+<h3>returns</h3>
+
+<p>get - integer specifying relative pixel offset
+set - returns y value</p>
+
+<h3>notes</h3>
+
+<p>Set is a fast operation.  Get is a relatively slow operation
+but gives a correct value, regardless of units.  If the
+style units are in <code>%</code> for example, get will give 
+you the resulting integer pixel offset.  Get will give
+you the offset even if there is no style property set.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">y</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
       <span class="k">return</span> <span class="nx">y</span><span class="p">;</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>gets or sets the relative X and Y pixel offset from parent</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relXY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h2>Awe.relXY( ele, [x, y] )</h2>
+
+<p>Get or set the relative X and Y position of a domNode</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>x</code> - optional float or integer to set
+<code>y</code> - optional float or integer to set</p>
+
+<h3>returns</h3>
+
+<p>get - object with properties x and y specifying relative pixel offset
+set - object with x,y parameters</p>
+
+<h3>notes</h3>
+
+<p>Set is a fast operation.  Get is a relatively slow operation
+but gives a correct value, regardless of units.  If the
+style units are in <code>%</code> for example, get will give 
+you the resulting integer pixel offset</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">relXY</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">y</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatX</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatY</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
       <span class="k">return</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">y</span> <span class="p">}</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetLeft</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetTop</span> <span class="p">}</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>gets or sets the width of a DOM node</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">w</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h2>Awe.width( ele, [w] )</h2>
+
+<p>Get or set the width of a domNode</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>w</code> - optional float or integer to set</p>
+
+<h3>returns</h3>
+
+<p>get - integer pixel width of the element
+set - width parameter</p>
+
+<h3>notes</h3>
+
+<p>Set is a fast operation.  Get is a relatively slow operation
+but gives a correct value, regardless of units.  If the
+style units are in <code>%</code> for example, get will give 
+you the resulting integer</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">w</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">w</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatW</span> <span class="o">=</span> <span class="nx">w</span><span class="p">;</span>
       <span class="k">return</span> <span class="nx">w</span><span class="p">;</span>
     <span class="p">}</span>
     
     <span class="k">return</span> <span class="nx">domNode</span><span class="p">.</span><span class="nx">offsetWidth</span><span class="p">;</span>
   <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>gets or sets the height of a DOM node</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <h2>Awe.height( ele, [h] )</h2>
+
+<p>Get or set the height of a domNode</p>
+
+<h3>params</h3>
+
+<p><code>ele</code> - DOM element to query
+<code>h</code> - optional float or integer to set</p>
+
+<h3>returns</h3>
+
+<p>get - integer pixel height of the element
+set - width parameter</p>
+
+<h3>notes</h3>
+
+<p>Set is a fast operation.  Get is a relatively slow operation
+but gives a correct value, regardless of units.  If the
+style units are in <code>%</code> for example, get will give 
+you the resulting integer</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Awe</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">domNode</span><span class="p">,</span><span class="nx">h</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">domNode</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span> <span class="o">+</span> <span class="s2">&quot;px&quot;</span><span class="p">;</span>
-      <span class="nx">domNode</span><span class="p">.</span><span class="nx">floatH</span> <span class="o">=</span> <span class="nx">h</span><span class="p">;</span>
       <span class="k">return</span> <span class="nx">h</span><span class="p">;</span>
     <span class="p">}</span>
     
