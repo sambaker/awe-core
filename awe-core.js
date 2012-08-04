@@ -613,6 +613,7 @@
     return JSON.stringify(o);
   }
 
+  // TODO review and consolidate with what is in awe-compatibility.js
   var requestAnimationFrameShim = (function() {
     return  global.requestAnimationFrame       ||
             global.webkitRequestAnimationFrame || 
