@@ -200,7 +200,7 @@
    */
   Awe.applyStyles = function(el, styles) {
     for (k in (styles || {})) {
-      (el.style[k] == styles[k]) || (el.style[k] = styles[k]);
+      el.style[k] = styles[k];
     }    
   } 
   
