@@ -200,7 +200,7 @@
    */
   Awe.applyStyles = function(el, styles) {
     for (k in (styles || {})) {
-      (el.style[k] == styles[k]) || (el.style[k] = styles[k]);
+      el.style[k] = styles[k];
     }    
   } 
   
@@ -247,9 +247,17 @@
       if (Awe.env.inputTouch)
       {
         // TODO: Use correct touch (lookup by touch start ID instead of always using index 0)
-        p = { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
+        p = { x: evt.changedTouches[0].pageX, y: evt.changedTouches[0].pageY };
       } else {
-        p = { x: evt.clientX, y: evt.clientY };
+        if(evt.pageX) {
+          p = { x: evt.pageX, y: evt.pageY };
+        } else {
+          // IE8 or older, based on http://www.quirksmode.org/js/events_properties.html
+          p = { 
+            x : e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft,
+            y : e.clientY + document.body.scrollTop + document.documentElement.scrollTop
+          }
+        }
       }
       p.x += touch.anchor.x;
       p.y += touch.anchor.y;
