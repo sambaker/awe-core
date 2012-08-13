@@ -254,8 +254,8 @@
         } else {
           // IE8 or older, based on http://www.quirksmode.org/js/events_properties.html
           p = { 
-            x : e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft,
-            y : e.clientY + document.body.scrollTop + document.documentElement.scrollTop
+            x : evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft,
+            y : evt.clientY + document.body.scrollTop + document.documentElement.scrollTop
           }
         }
       }
