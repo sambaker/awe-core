@@ -80,13 +80,22 @@
   // |eventDragEnd|The event name for drag move events on this platform|
   // |eventClick|The event name for click events on this platform|
   Awe.env = {};
-  Awe.env.inputTouch = "ontouchstart" in global;
-  Awe.env.inputMouse = !Awe.env.inputTouch;
-  
-  Awe.env.eventDragStart = Awe.env.inputTouch ? "touchstart" : "mousedown";
-  Awe.env.eventDragMove = Awe.env.inputTouch ? "touchmove" : "mousemove";
-  Awe.env.eventDragEnd = Awe.env.inputTouch ? "touchend" : "mouseup";
-  Awe.env.eventClick = Awe.env.inputTouch ? "touchend" : "click";
+
+  if (window.navigator.msPointerEnabled) {
+    Awe.env.inputTouch = true;
+    Awe.env.inputMouse = true;
+    Awe.env.eventDragStart = "MSPointerDown";
+    Awe.env.eventDragMove = "MSPointerMove";
+    Awe.env.eventDragEnd = "MSPointerUp";
+    Awe.env.eventClick = "click";    
+  } else {
+    Awe.env.inputTouch = "ontouchstart" in global;
+    Awe.env.inputMouse = !Awe.env.inputTouch;
+    Awe.env.eventDragStart = Awe.env.inputTouch ? "touchstart" : "mousedown";
+    Awe.env.eventDragMove = Awe.env.inputTouch ? "touchmove" : "mousemove";
+    Awe.env.eventDragEnd = Awe.env.inputTouch ? "touchend" : "mouseup";
+    Awe.env.eventClick = Awe.env.inputTouch ? "touchend" : "click";    
+  }
   
   // ** {{{ Awe.clamp(n, range1, range2 }}} **
   //
@@ -496,9 +505,12 @@
 
       xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
       xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
-//      if (config.onDragUpdate) {
+
+      if(Awe.env.inputTouch) {
+        xAddEventListener(el, "touchcancel", dragEnd);
+      }
+
       touch.updateIntervalId = setInterval(dragUpdate, config.dragUpdateInterval || 16);
-//      }
     }
     
     xAddEventListener(el, Awe.env.eventDragStart, dragStart);
