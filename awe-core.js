@@ -433,8 +433,8 @@
       }
       touch.dragging = false;
       cancelEvents && evt && Awe.cancelEvent(evt);
-      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
-      xRemoveEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      xRemoveEventListener(Awe.env.inputMouse ? document : el, Awe.env.eventDragMove, dragMove);
+      xRemoveEventListener(Awe.env.inputMouse ? document : el, Awe.env.eventDragEnd, dragEnd);
       // TODO Check for animating filters before cancelling event bits
       Awe.forEach(filters, function(filter) {
         if ((immediate || !filter.animates) && filter.end) {
@@ -503,8 +503,8 @@
         config.onDragStart(drag);
       }
 
-      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragMove, dragMove);
-      xAddEventListener(Awe.env.inputTouch ? el : document, Awe.env.eventDragEnd, dragEnd);
+      xAddEventListener(Awe.env.inputMouse ? document : el, Awe.env.eventDragMove, dragMove);
+      xAddEventListener(Awe.env.inputMouse ? document : el, Awe.env.eventDragEnd, dragEnd);
 
       if(Awe.env.inputTouch) {
         xAddEventListener(el, "touchcancel", dragEnd);
